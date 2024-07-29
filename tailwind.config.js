@@ -7,6 +7,23 @@ module.exports = {
   ],
   theme: {
     extend: {
+      scrollbar: {
+        thin: {
+          width: "8px",
+          height: "8px",
+        },
+        thumb: {
+          "background-color": "#888",
+          "border-radius": "10px",
+        },
+        track: {
+          "background-color": "#f1f1f1",
+          "border-radius": "10px",
+        },
+      },
+      variants: {
+        scrollbar: ["rounded"],
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
@@ -45,7 +62,26 @@ module.exports = {
           borderColor: "var(--border)",
         },
       };
-      addUtilities(newUtilities, ["responsive", "hover"]);
+      addUtilities(
+        newUtilities,
+        ["responsive", "hover"],
+        {
+          ".scrollbar-thin": {
+            "scrollbar-width": "thin",
+          },
+          ".scrollbar-thumb": {
+            "--scrollbar-color": "#888 #f1f1f1",
+            "scrollbar-color": "#888 #f1f1f1",
+          },
+          ".scrollbar-track": {
+            "scrollbar-track-color": "#f1f1f1",
+          },
+          ".scrollbar-rounded": {
+            "scrollbar-border-radius": "10px",
+          },
+        },
+        ["responsive"]
+      );
     },
   ],
 };
