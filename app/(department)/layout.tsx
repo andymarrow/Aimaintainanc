@@ -1,19 +1,17 @@
 import React from "react";
-import Navbar from "../ui/dashboard/navbar/navbar";
-import Sidebar from "../ui/dashboard/sidebar/sidebar";
+import Sidebar from "./_components/sidebar";
+import Navbar from "./_components/navbar";
 
-const layout = ({ children }) => {
+const Layout = ({ children = [] }) => {
   return (
-    <div className="container flex">
-      <div className="max-w-sm flex-1 bg:bgSoft p-6">
-        <Sidebar />
-      </div>
-      <div className="flex-grow">
+    <div className="min-h-screen flex">
+      <Sidebar />
+      <div className="flex-grow flex flex-col">
         <Navbar />
-        {children}
+        <main className="flex-grow p-6">{children}</main>
       </div>
     </div>
   );
 };
 
-export default layout;
+export default Layout;
