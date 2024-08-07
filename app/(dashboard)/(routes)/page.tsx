@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
 import { BarChart2, CheckSquare, FileText, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import PieChart from "@/components/PieChart";
-import BarChart from "@/components/BarChart";// Assuming you have chart components
+import BarChart from "@/components/BarChart"; // Assuming you have chart components
 
 export default function Home() {
   // Example data
@@ -36,7 +36,10 @@ export default function Home() {
       {/* First Row: Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {cardData.map((card, index) => (
-          <div key={index} className="bg-gray-400 shadow-md rounded-lg p-6 flex items-center space-x-4">
+          <div
+            key={index}
+            className="bg-gray-400 shadow-md rounded-lg p-6 flex items-center space-x-4"
+          >
             <div className="text-blue-500">
               <card.icon size={24} />
             </div>
@@ -66,7 +69,7 @@ export default function Home() {
 
       {/* Third Row: Table */}
       <div className="bg-gray-400 shadow-md rounded-lg p-6 overflow-x-auto scrollbar-thin scrollbar-thumb scrollbar-track scrollbar-rounded">
-  <table className="w-full min-w-max">
+        <table className="w-full min-w-max">
           <thead className="bg-gray-500 rounded-lg ">
             <tr className=" rounded">
               <th className="p-3 text-left">Requester Name</th>
@@ -94,9 +97,11 @@ export default function Home() {
               <td className="p-3">XYZ123</td>
               <td className="p-3">High</td>
               <a href="/assign">
-              <td className="p-3 bg-green-500 text-white rounded-lg m-2">View</td>
+                <td className="p-3 bg-green-500 text-white rounded-lg m-2">
+                  View
+                </td>
               </a>
-           </tr>
+            </tr>
             {/* Add more rows as needed */}
           </tbody>
         </table>
