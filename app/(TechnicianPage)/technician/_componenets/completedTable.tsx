@@ -7,12 +7,12 @@ import { requestInformation } from '../(subsidebar)/data'
 import { useRouter } from "next/navigation";
 
 
-const Table = ({ requests }) => {
+const CompletedTable = ({ requests }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const router = useRouter();
 
     const handleClick = (id: number) => {
-      router.push(`/api/item/${id}`);
+      router.push(`/technician/api/item/completed/${id}`);
     };
   
     const [currentPage, setCurrentPage] = useState(1);
@@ -31,43 +31,37 @@ const Table = ({ requests }) => {
     setIsModalOpen(false);
   };
   return (
-    <div className="p-6 overflow-x-auto ">
-    <div className="bg-slate-200 shadow-md rounded-lg p-6 overflow-x-auto scrollbar-thin scrollbar-thumb scrollbar-track scrollbar-rounded min-w-full">
+    <div className="p-6 space-y-6">
+    <div className="bg-slate-200 shadow-md rounded-lg p-6 overflow-x-auto scrollbar-thin scrollbar-thumb scrollbar-track scrollbar-rounded">
         <table className="w-full min-w-max">
-          <thead >
+          <thead className="bg-slate-300 rounded-lg ">
             <tr className=" rounded">
               <th className="p-3 text-left">Requester Name</th>
-              <th className="p-3 text-left">Email</th>
-              <th className="p-3 text-left">Phone No</th>
-              <th className="p-3 text-left">Problem</th>
-              <th className="p-3 text-left">Description</th>
-              <th className="p-3 text-left">Department</th>
-              <th className="p-3 text-left">Device Type</th>
-              <th className="p-3 text-left">Model No</th>
-              <th className="p-3 text-left">Urgency</th>
+              <th className="p-3 text-left">technician Name</th>
+              <th className="p-3 text-left">Given Date</th>
+              <th className="p-3 text-left">Finished Date</th>
+              <th className="p-3 text-left">Employee Rating</th>
+              <th className="p-3 text-left">Comments</th>
               <th className="p-3 text-left">Action</th>
             </tr>
           </thead>
           <tbody>
           {requestToBeRendered.map((request, index) => (
-            <tr key={index} >
+            <tr key={index} className="bg-white">
+              <td className="p-3">{request.technicianName}</td>
               <td className="p-3">{request.requesterName}</td>
-              <td className="p-3">{request.email}</td>
-              <td className="p-3">{request.phoneNo}</td>
-              <td className="p-3 capitalize">{request.requestType}</td>
-              <td className="p-3">{request.description}</td>
-              <td className="p-3 capitalize">{request.department}</td>
-              <td className="p-3">{request.deviceType}</td>
-              <td className="p-3">{request.modelNo}</td>
-              <td className="p-3 capitalize">{request.Urgency}</td>
+              <td className="p-3">{request.GivenDate}</td>
+              <td className="p-3 capitalize">{request.FinishedDate}</td>
+              <td className="p-3">{request.EmployeeRating}</td>
+              <td className="p-3">{request.Comments}</td>
               <td className="p-3">
                 
               <button
                 type="button"
-                className={`font-bold py-2 px-4 rounded-xl mt-4 ${request.status === "assigned" ? "bg-green-500 hover:bg-green-700" : request.status === "doedLatter" ? "bg-yellow-500 hover:bg-yellow-700" : request.status === "view" ? "bg-green-500 hover:bg-green-700" : ""}`}
+                className={`font-bold py-2 px-4 rounded-xl mt-4 bg-blue-500 hover:bg-blue-700`}
                 onClick={() => handleClick(request.id)}
               >
-                {request.status === "doedLatter" ? "DoedLatter" : request.status === "assigned" ? "Assigned" : request.status === "view" ? "View" : ""}
+                    Details
               </button>
 
             
@@ -117,4 +111,4 @@ const Table = ({ requests }) => {
   );
 };
 
-export default Table;
+export default CompletedTable;
