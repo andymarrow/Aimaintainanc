@@ -8,7 +8,7 @@ const guestRoutes = [
     {
         icon: Layout,
         label: "Dashboard",
-        href: "/",
+        href: "/dashboardHome",
     },
     {
         icon: Compass,
@@ -33,7 +33,7 @@ const guestRoutes = [
     {
         icon: BarChart,
         label: "Analysis",
-        href: "/analysis",
+        href: "/analysis_Table",
     },
     {
         icon: MessageCircle,
@@ -53,7 +53,7 @@ const guestRoutes = [
     {
         icon: LogOut,
         label: "Logout",
-        href: "/Login",
+        href: "/Home",
     },
 ]
 

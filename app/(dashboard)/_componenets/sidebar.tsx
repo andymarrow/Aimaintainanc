@@ -3,7 +3,7 @@ import { SidebarRoutes } from "./sidebar-routes"
 
 export const Sidebar =() =>{
     return(
-        <div className="m-2 rounded-lg h-full border border-gray-300 flex flex-col overflow-auto bg-gray-400 shadow-lg overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}> 
+        <div className="m-2 rounded-lg h-full border border-gray-300 flex flex-col overflow-auto bg-slate-200  shadow-lg overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}> 
             <div className="p-6">
                 <div className="ml-4">
                 <Logo />

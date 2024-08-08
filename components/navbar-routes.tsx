@@ -11,7 +11,7 @@ export const NavbarRoutes = () => {
     return (
         <div className="flex justify-between items-center space-y-10 ">
             {/* Display the current page on the far left */}
-            <div className="text-lg font-bold text-gray-700">
+            <div className="text-lg font-bold text-gray-700 hidden md:block">
                 {currentPage || "Home"}
             </div>
 
@@ -40,7 +40,15 @@ export const NavbarRoutes = () => {
                         d="M21 21l-4.35-4.35M10 18a8 8 0 100-16 8 8 0 000 16z"
                     />
                 </svg>
-            </div>
+               
+           </div>
+           <div className="ml-5 pb-10">
+            <a href="/settings">
+                    <span >🔔 <span className="text-green ml-1">5</span></span>
+            </a>
+           </div>
+          
+           
         </div>
     );
 };

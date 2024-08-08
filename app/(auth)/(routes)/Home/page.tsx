@@ -1,8 +1,8 @@
 import React from 'react'
-import Login from '../Login/page'
 
+import {Logo }from '@/app/(dashboard)/_componenets/logo'
 import Link from 'next/link'
-import Image from 'next/image'
+import Login from '../_componenets/login'
 function HomePage() {
   return (
     
@@ -11,12 +11,7 @@ function HomePage() {
         {/*Navbar*/}
 
         <nav className='flex items-center sm:space-x-40 md:space-x-96 p-4 border border-gray-300  rounded-2xl '>
-        <Image 
-            height={130}
-            width={130}
-            alt="logo"
-            src="/backgroundlessAi.png"
-        />
+            <Logo/>
             <div className='flex justify-center'>
                <h2>Maintenace Request</h2>
             </div>
@@ -30,10 +25,7 @@ function HomePage() {
         </main>
     
 
-         {/*Admin*/}
-         <div className='text-end pr-8 text-2xl'>
-        <Link href={"/AdminLogin"} >Admin</Link>
-        </div>
+        
     
     </div>
     

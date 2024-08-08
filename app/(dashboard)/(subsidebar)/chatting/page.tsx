@@ -3,7 +3,7 @@ import Image from "next/image";
 const ChattingPage = () => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-           <div className="bg-gray-400 shadow-md rounded-lg p-6">
+           <div className="bg-slate-300 shadow-md rounded-lg p-6">
 
   <div className="flex items-center justify-between mb-4">
     <button
@@ -109,7 +109,7 @@ dfgasgasga
 dfgasgasga
 dfgasgasga
 dfgasgasga */}
-            <div className="bg-gray-400 shadow-md rounded-lg p-6 flex flex-col ">
+            <div className="bg-slate-300 shadow-md rounded-lg p-6 flex flex-col ">
                 <h2 className="text-lg font-bold mb-4 text-white text-center">Chatting Section</h2>
                 
   

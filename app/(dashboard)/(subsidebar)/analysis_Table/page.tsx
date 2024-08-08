@@ -73,7 +73,7 @@ const AnalysisPage = () => {
         {/* First Row: Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {cardData.map((card, index) => (
-            <div key={index} className="bg-gray-400 shadow-md rounded-lg p-6 flex items-center space-x-4">
+            <div key={index} className="bg-slate-200 shadow-md rounded-lg p-6 flex items-center space-x-4">
               <div className="text-blue-500">
                 <card.icon size={24} />
               </div>
@@ -87,13 +87,13 @@ const AnalysisPage = () => {
   
         {/* Second Row: Analysis Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-gray-400 shadow-md rounded-lg p-6">
+          <div className="bg-slate-200 shadow-md rounded-lg p-6">
             <h2 className="text-lg font-bold mb-4">Pie Chart Analysis</h2>
             <div className="h-64">
               <PieChart /> {/* Display Pie Chart */}
             </div>
           </div>
-          <div className="bg-gray-400 shadow-md rounded-lg p-6">
+          <div className="bg-slate-200 shadow-md rounded-lg p-6">
             <h2 className="text-lg font-bold mb-4">Bar Chart Analysis</h2>
             <div className="h-64">
               <BarChart /> {/* Display Bar Chart */}
@@ -101,7 +101,7 @@ const AnalysisPage = () => {
           </div>
         </div>
         {/* Third Row: Completed Analysis Card */}
-        <div className="bg-gray-400 shadow-md rounded-lg p-6 text-center">
+        <div className="bg-slate-200 shadow-md rounded-lg p-6 text-center">
       <div className="flex justify-end">
         <div className="relative">
           <select

@@ -1,27 +1,21 @@
 "use client";
+import React, { useState } from "react";
+import { requests } from "../data";
+import Table from "../../_components/Table";
+import Card from "../../_components/Card";
 
-import { Button } from "@/components/ui/button";
-
-import React, { useState } from 'react';
-import { requestInformation } from "../data";
-import Table from "../../_componenets/Table";
-import Card from "../../_componenets/Card";
-
-const DoLatterPage = () => {
-  const DooedLatterRequest = requestInformation.filter(
-    (request) => request.status === "doedLatter"
+const AcceptedRequest = () => {
+  const acceptedRequest = requests.filter(
+    (request) => request.status === "accepted"
   );
   const [viewType, setViewType] = useState("table");
 
-
- 
   const handleToggleView = (view) => {
     setViewType(view);
   };
 
-   
-    return ( 
-      <div className="p-6 space-y-6">
+  return (
+    <div>
       <div className="flex justify-start mb-4">
         <button
           onClick={() => handleToggleView("table")}
@@ -44,17 +38,17 @@ const DoLatterPage = () => {
           Card
         </button>
       </div>
-
       {viewType === "table" ? (
-        <Table requests={DooedLatterRequest} />
+        <Table requests={acceptedRequest} />
       ) : (
-            <Card requests={DooedLatterRequest} />
-          )
-   
-      }
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {acceptedRequest.map((request, index) => (
+            <Card key={index} requests={request} />
+          ))}
+        </div>
+      )}
     </div>
-    );
-  };
-  
- 
-export default DoLatterPage;
+  );
+};
+
+export default AcceptedRequest;
