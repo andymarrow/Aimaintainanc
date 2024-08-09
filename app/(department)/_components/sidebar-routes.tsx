@@ -15,7 +15,7 @@ const guestRoutes = [
   {
     icon: ClipboardList,
     label: "All Request",
-    href: "/allRequest",
+    href: "/",
   },
   {
     icon: CheckSquare,
@@ -45,14 +45,14 @@ const guestRoutes = [
   {
     icon: LogOut,
     label: "Logout",
-    href: "/Home",
+    href: "/sign-out",
   },
 ];
 
 export const SidebarRoutes = () => {
   const routes = guestRoutes;
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full ">
       {routes.map((route) => (
         <SidebarItem
           key={route.href}

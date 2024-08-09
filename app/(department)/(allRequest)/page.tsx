@@ -1,31 +1,29 @@
 "use client";
-import React, { useState } from "react";
-import { requests } from "../../data";
-import Table from "../../_components/Table";
-import Card from "../../_components/Card";
 
-const PendingRequest = () => {
+import React from "react";
+import Table from "../_components/Table";
+import Card from "../_components/Card";
+import { useState } from "react";
+import { requests } from "../data";
+
+const AllRequest = () => {
   const [viewType, setViewType] = useState("table");
   const [sortBy, setSortBy] = useState("Urgency");
 
   const department = "IT";
-  const deparmentRequests = requests.filter(
+  const requestsByDepartment = requests.filter(
     (request) => request.department === department
-  );
-  const inprogressRequest = deparmentRequests.filter(
-    (request) => request.status === "InProgress"
   );
 
   const handleToggleView = (view) => {
     setViewType(view);
   };
-
   const handleSort = (e) => {
     const sortField = e.target.value;
     setSortBy(sortField);
   };
 
-  const sortedRequests = inprogressRequest.slice().sort((a, b) => {
+  const sortedRequests = requestsByDepartment.slice().sort((a, b) => {
     if (sortBy === "Urgency") {
       return a.Urgency.localeCompare(b.Urgency);
     } else if (sortBy === "Status") {
@@ -42,7 +40,7 @@ const PendingRequest = () => {
         <div className="flex mb-4">
           <button
             onClick={() => handleToggleView("table")}
-            className={`px-4 py-2 mr-2 ${
+            className={`px-4 py-2 mr-2 hidden md:block ${
               viewType === "table"
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 text-black"
@@ -52,7 +50,7 @@ const PendingRequest = () => {
           </button>
           <button
             onClick={() => handleToggleView("card")}
-            className={`px-4 py-2 ${
+            className={`md:block px-4 py-2 hidden ${
               viewType === "card"
                 ? "bg-blue-500 text-white"
                 : "bg-gray-200 text-black"
@@ -81,5 +79,4 @@ const PendingRequest = () => {
     </div>
   );
 };
-
-export default PendingRequest;
+export default AllRequest;

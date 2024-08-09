@@ -31,7 +31,7 @@ const Table = ({ requests }) => {
     setIsModalOpen(false);
   };
   return (
-    <div className="p-6 overflow-x-auto ">
+    <div className="overflow-x-auto ">
     <div className="bg-slate-200 shadow-md rounded-lg p-6 overflow-x-auto scrollbar-thin scrollbar-thumb scrollbar-track scrollbar-rounded min-w-full">
         <table className="w-full min-w-max">
           <thead >

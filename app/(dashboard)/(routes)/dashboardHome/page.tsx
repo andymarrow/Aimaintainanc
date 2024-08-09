@@ -57,14 +57,14 @@ export default function Home() {
       {/* Second Row: Analysis Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-slate-200 shadow-md rounded-lg p-6">
-          <h2 className="text-lg font-bold mb-4">Pie Chart Analysis</h2>
-          <div className="h-64">
+          <h2 className="text-lg font-bold mb-4 ">Pie Chart Analysis</h2>
+          <div className="flex h-64 justify-center">
             <PieChart /> {/* Display Pie Chart */}
           </div>
         </div>
         <div className="bg-slate-200 shadow-md rounded-lg p-6">
           <h2 className="text-lg font-bold mb-4">Bar Chart Analysis</h2>
-          <div className="h-64">
+          <div className="flex justify-center h-64">
             <BarChart /> {/* Display Bar Chart */}
           </div>
         </div>
