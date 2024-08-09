@@ -2,14 +2,19 @@
 import { usePathname } from "next/navigation";
 import React from "react";
 import { MdNotifications, MdSearch } from "react-icons/md";
+import { MobileSidebar } from "./mobile-sidebar";
 
 const Navbar = () => {
   const pathname = usePathname();
   return (
-    <div className="p-5 rounded-md flex items-center justify-between bg-slate-200">
+    <div className="md:sticky top-0 left-0 p-5 rounded-md flex  items-center justify-between bg-slate-200">
+      <div className="flex justify-start">
+        <MobileSidebar />
+      </div>
       <div className="font-bold capitalize p-5">
         {pathname.split("/").pop()}
       </div>
+
       <div className="flex items-center gap-20">
         <div className="flex items-center gap-10 bg-slate-100 p-5 rounded-md">
           <MdSearch />

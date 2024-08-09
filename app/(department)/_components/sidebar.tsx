@@ -5,8 +5,12 @@ import Image from "next/image";
 export const Sidebar = () => {
   return (
     <div
-      className="m-2 rounded-lg min-h-screen border border-gray-300 flex flex-col overflow-auto bg-slate-200 shadow-lg overflow-y-auto"
-      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      className="fixed top-0 left-0  m-2 rounded-lg min-h-screen border border-gray-300 flex flex-col 
+      overflow-auto bg-slate-200 shadow-lg overflow-y-auto"
+      style={{
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+      }}
     >
       <div className="p-6">
         <div className="ml-4 mb-4">

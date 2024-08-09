@@ -29,13 +29,28 @@ const Card = ({ requests }) => {
           >
             <h2 className="text-xl font-bold mb-2">{request.requesterName}</h2>
             <p>
+              <strong>Email:</strong> {request.email}
+            </p>
+            <p>
+              <strong>Phone Number:</strong> {request.phoneNo}
+            </p>
+            <p>
+              <strong>Request Type:</strong> {request.requestType}
+            </p>
+            <p>
+              <strong>Description:</strong> {request.description}
+            </p>
+            <p>
+              <strong>Departmet:</strong> {request.department}
+            </p>
+            <p>
               <strong>Device Type:</strong> {request.deviceType}
             </p>
             <p>
-              <strong>Phone Number:</strong> {request.phoneNumber}
+              <strong>Model Number:</strong> {request.modelNo}
             </p>
             <p>
-              <strong>Email:</strong> {request.email}
+              <strong>Urgency</strong> {request.Urgency}
             </p>
             <div
               className={`inline-block px-2 py-1 mt-2 text-xs font-semibold rounded-full ${
