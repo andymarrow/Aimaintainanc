@@ -15,9 +15,9 @@ export const SidebarItem = ({ icon: Icon, label, href }: SidebarItemProps) => {
   const router = useRouter();
 
   const isActive =
-    (pathname === "/" && href === "/") ||
+    (pathname === "/department" && href === "/department") ||
     pathname === href ||
-    pathname?.startsWith(`${href}/`);
+    pathname?.startsWith(`${href}/department`);
 
   const onClick = () => {
     router.push(href);

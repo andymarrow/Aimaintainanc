@@ -7,7 +7,6 @@ import PieChart from "@/components/PieChart";
 import BarChart from "@/components/BarChart";
 import CountUp from "react-countup";
 import { requests } from "../../data";
-import newPieChart from "@/components/newPieChart";
 
 const AnalysisPage = () => {
   const [selectedDate, setSelectedDate] = useState<string>("2024-07");

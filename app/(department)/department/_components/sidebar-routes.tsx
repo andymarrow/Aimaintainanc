@@ -15,37 +15,37 @@ const guestRoutes = [
   {
     icon: ClipboardList,
     label: "All Request",
-    href: "/",
+    href: "/department",
   },
   {
     icon: CheckSquare,
     label: "Accepted",
-    href: "/accepted",
+    href: "/department/accepted",
   },
   {
     icon: Hourglass,
-    label: "Pending",
-    href: "/pending",
+    label: "In progress",
+    href: "/department/pending",
   },
   {
     icon: XSquare,
     label: "Rejected",
-    href: "/rejected",
+    href: "/department/rejected",
   },
   {
     icon: BarChart,
     label: "Analysis",
-    href: "/analysis",
+    href: "/department/analysis",
   },
   {
     icon: Search,
     label: "Problem Search",
-    href: "/problem_search",
+    href: "/department/problem_search",
   },
   {
     icon: LogOut,
     label: "Logout",
-    href: "/sign-out",
+    href: "/auth/Home",
   },
 ];
 

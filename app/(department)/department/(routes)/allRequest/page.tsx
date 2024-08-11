@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import Table from "../_components/Table";
-import Card from "../_components/Card";
+import Table from "../../_components/Table";
+import Card from "../../_components/Card";
 import { useState } from "react";
-import { requests } from "../data";
+import { requests } from "../../data";
 
 const AllRequest = () => {
   const [viewType, setViewType] = useState("table");

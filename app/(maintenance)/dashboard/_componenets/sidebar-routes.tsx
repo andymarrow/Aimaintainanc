@@ -5,8 +5,6 @@ import {
   CheckSquare,
   CheckSquare2,
   Compass,
-  ShieldMinus,
-  ShieldCheck,
   FileText,
   Layout,
   LogOut,
@@ -16,26 +14,53 @@ import {
 } from "lucide-react";
 import { SidebarItem } from "./sidebar-item";
 import Image from "next/image";
-import Link from "next/link";
 
 const guestRoutes = [
   {
-    icon: ShieldCheck,
-    label: "Department List",
-    href: "/admin/dashboard",
+    icon: Layout,
+    label: "Dashboard",
+    href: "/dashboard/dashboardHome",
   },
   {
-    icon: ShieldMinus,
-    label: "Removed Accounts",
-    href: "/admin/Deactivated",
+    icon: Compass,
+    label: "Assign",
+    href: "/dashboard/assign",
   },
-
+  {
+    icon: FileText,
+    label: "Ongoing",
+    href: "/dashboard/assigned_pending",
+  },
+  {
+    icon: CheckSquare2,
+    label: "Do Latter",
+    href: "/dashboard/do_latter",
+  },
+  {
+    icon: CheckSquare,
+    label: "Completed",
+    href: "/dashboard/completed",
+  },
+  {
+    icon: BarChart,
+    label: "Analysis",
+    href: "/dashboard/analysis_Table",
+  },
+  {
+    icon: MessageCircle,
+    label: "Chatting",
+    href: "/dashboard/chatting",
+  },
   {
     icon: Settings,
     label: "Settings",
-    href: "/admin/settings",
+    href: "/dashboard/settings",
   },
-
+  {
+    icon: Users,
+    label: "Feedback",
+    href: "/dashboard/employee_feedback",
+  },
   {
     icon: LogOut,
     label: "Logout",

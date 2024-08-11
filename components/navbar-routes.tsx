@@ -6,7 +6,7 @@ export const NavbarRoutes = () => {
     const pathname = usePathname();
 
     // Extract the current page from the pathname
-    const currentPage = pathname.substring(1); // Remove leading slash
+    const currentPage = pathname.split("/").pop(); // Remove leading slash
 
     return (
         <div className="flex justify-between items-center space-y-10 ">

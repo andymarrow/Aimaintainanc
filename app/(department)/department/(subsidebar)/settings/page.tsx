@@ -1,6 +1,6 @@
 "use client";
-import { Navbar } from "../../../_componenets/AdminComp/navbar";
-import { Sidebar } from "../../../_componenets/AdminComp/sidbar";
+import Navbar from "../../_components/navbar";
+import Sidebar from "../../_components/sidebar";
 
 import Image from "next/image";
 import { useState } from "react";

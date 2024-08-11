@@ -1,7 +1,11 @@
 "use Client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowUpNarrowWide , ArrowDownWideNarrow, CirclePlus  } from 'lucide-react';
+import {
+  ArrowUpNarrowWide,
+  ArrowDownWideNarrow,
+  CirclePlus,
+} from "lucide-react";
 import Link from "next/link";
 const Table = ({ requests }) => {
   //sorting
@@ -35,9 +39,8 @@ const Table = ({ requests }) => {
   const requestToBeRendered = sortedRequests.slice(startIndex, endIndex);
 
   const handleButtonClick = (id: Number) => {
-    router.push(`/approvalState/${id}`);
+    router.push(`/admin/api/item/${id}`);
   };
-
 
   // modal
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,31 +54,49 @@ const Table = ({ requests }) => {
   };
 
   return (
-    
     <div className="overflow-x-auto ${isModalOpen ? 'blur-md' : ''}` ">
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-xl font-bold mb-4">Add User</h2>
-            
+
             <form>
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Username</label>
-                <input type="text"placeholder="Full Name" className="w-full p-2 border border-gray-300 rounded-lg" />
-              </div>
-              
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" placeholder="some@gmail.com" className="w-full p-2 border border-gray-300 rounded-lg" />
+                <label className="block text-sm font-medium text-gray-700">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  placeholder="Full Name"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
               </div>
 
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Password</label>
-                <input type="password" className="w-full p-2 border border-gray-300 rounded-lg" />
+                <label className="block text-sm font-medium text-gray-700">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  placeholder="some@gmail.com"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
               </div>
-              
+
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Department</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Department
+                </label>
                 <select className="w-full p-2 border border-gray-300 rounded-lg">
                   <option value="software">Software Department</option>
                   <option value="hr">HR Department</option>
@@ -84,51 +105,61 @@ const Table = ({ requests }) => {
                   <option value="admin">Admin</option>
                 </select>
               </div>
-              
-              
-              
+
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">Role</label>
-                <input type="text" placeholder="head or employee" className="w-full p-2 border border-gray-300 rounded-lg" />
+                <label className="block text-sm font-medium text-gray-700">
+                  Role
+                </label>
+                <input
+                  type="text"
+                  placeholder="head or employee"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
               </div>
-              
+
               <div className="flex justify-end">
-                <button type="button" onClick={handleClose} className="mr-4 px-4 py-2 bg-gray-500 text-white rounded-lg">Cancel</button>
-                <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-lg">Submit</button>
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="mr-4 px-4 py-2 bg-gray-500 text-white rounded-lg"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                >
+                  Submit
+                </button>
               </div>
             </form>
           </div>
         </div>
       )}
 
-
-
-
-
-
-
-
       <div className="flex flex-row  justify-between">
-          <div><button onClick={handleSort}>
-                    {isSortedAsc ? <ArrowDownWideNarrow /> : <ArrowUpNarrowWide />}
-                  </button>
+        <div>
+          <button onClick={handleSort}>
+            {isSortedAsc ? <ArrowDownWideNarrow /> : <ArrowUpNarrowWide />}
+          </button>
+        </div>
+        <div className=" flex flex-row bg-blue-950 rounded-md w-20">
+          <div className="text-gray-200" onClick={handleAddClick}>
+            <CirclePlus />
           </div>
-          <div className=" flex flex-row bg-blue-950 rounded-md w-20">
-            <div className="text-gray-200" onClick={handleAddClick} ><CirclePlus /></div>
-            <div>
-                <Link href={''}>
-                <button className=" text-gray-200 items-end flex-row " > 
-                  ADD
-                </button>
-                </Link>
-            </div>
-            
-          </div>   
-      </div>     
+          <div>
+            <Link href={""}>
+              <button className=" text-gray-200 items-end flex-row ">
+                ADD
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
       <table className="min-w-full bg-white border border-gray-200 ">
         <thead>
           <tr>
-          <th className="py-2 px-4">ID</th>
+            <th className="py-2 px-4">ID</th>
             <th className="py-2 px-4">User Name</th>
             <th className="py-2 px-4">Email</th>
             <th className="py-2 px-4">Password</th>

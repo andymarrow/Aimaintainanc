@@ -1,22 +1,24 @@
-"use client"
-import React from 'react'
-import { Navbar } from '../../../_componenets/EmpComp/navbar'
-import { Sidebar } from '../../../_componenets/EmpComp/sidebar'
-import { requests } from '../../../empData'
-import TabTable from '../../../_componenets/EmpComp/TabTable'
+"use client";
+import React from "react";
+import { Navbar } from "../../_componenets/EmpComp/navbar";
+import { Sidebar } from "../../_componenets/EmpComp/sidebar";
+import { requests } from "../../empData";
+import TabTable from "../../_componenets/EmpComp/TabTable";
 
 const SettingsPage = () => {
-   const employeeName = "Miki Alemu";
+  const employeeName = "Miki Alemu";
 
   // Find the employee's info
-  const employee = requests.find(emp => emp.requesterName === employeeName);
+  const employee = requests.find((emp) => emp.requesterName === employeeName);
 
   if (!employee) {
     return <div>Employee not found</div>;
   }
 
   // Filter requests to include only those belonging to the specific employee
-  const filteredRequests = requests.filter(req => req.requesterName === employeeName);
+  const filteredRequests = requests.filter(
+    (req) => req.requesterName === employeeName
+  );
 
   return (
     <div className="h-full">
@@ -32,7 +34,7 @@ const SettingsPage = () => {
         <TabTable requests={filteredRequests} />
       </div>
     </div>
-  )
+  );
 };
 
 export default SettingsPage;
