@@ -10,6 +10,7 @@ import {
   FileText,
   Layout,
   LogOut,
+  Search,
   MessageCircle,
   Settings,
   Users,
@@ -22,6 +23,11 @@ const guestRoutes = [
     icon: ShieldCheck,
     label: "Request so far",
     href: "/employee/emp_dashboard",
+  },
+  {
+    icon: Search,
+    label: "Problem Search",
+    href: "/employee/SearchProblem",
   },
 
   {

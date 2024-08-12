@@ -14,7 +14,7 @@ const Table = ({ requests }) => {
   const requestToBeRendered = requests.slice(startIndex, endIndex);
 
   const handleButtonClick = (id: Number) => {
-    router.push(`/approvalState/${id}`);
+    router.push(`/department/api/statusId/${id}`);
   };
   return (
     <div className="overflow-x-auto">

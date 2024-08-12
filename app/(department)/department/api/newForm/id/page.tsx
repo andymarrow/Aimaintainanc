@@ -17,15 +17,7 @@ export default function AssignedCompleted() {
   };
   return (
     <div className="">
-      {/* Nav */}
-      <div className="h-[80px] md:pl-60 fixed inset-y-0 w-full  top-0 z-50">
-        <Navbar />
-      </div>
-      {/* Side */}
-      <div className="hidden md:flex h-full w-56 flex-col fixed top-0 inset-y-0 z-40 ml-4">
-        <Sidebar />
-      </div>
-      <main className="pt-[100px] md:pl-60 ">
+      <main className="">
         <div className="bg-slate-400  rounded-lg shadow-lg p-4 sm:p-6 lg:p-8  w-full ">
           <h2 className="text-3xl font-bold mb-4 text-center">Request Form</h2>
           <p className="mb-4">

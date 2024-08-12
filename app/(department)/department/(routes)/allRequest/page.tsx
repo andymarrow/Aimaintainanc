@@ -5,10 +5,14 @@ import Table from "../../_components/Table";
 import Card from "../../_components/Card";
 import { useState } from "react";
 import { requests } from "../../data";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const AllRequest = () => {
   const [viewType, setViewType] = useState("table");
   const [sortBy, setSortBy] = useState("Urgency");
+
+  const router = useRouter();
 
   const department = "IT";
   const requestsByDepartment = requests.filter(
@@ -33,6 +37,9 @@ const AllRequest = () => {
     }
     return 0;
   });
+  const handleClickRoute = (id: Number) => {
+    router.push(`/department/api/newForm/id`);
+  };
 
   return (
     <div>
@@ -59,7 +66,20 @@ const AllRequest = () => {
             Card
           </button>
         </div>
-        <div>
+        <div className="flex gap-5">
+          <div className="flex  border border-gray-300 bg-blue-900 text-center items-center text-white p-2 rounded-lg">
+            <div className="text-gray-200 text-center">
+              <Plus />
+            </div>
+            <div>
+              <button
+                className="text-gray-200 items-end flex-row"
+                onClick={() => handleClickRoute()}
+              >
+                New Request
+              </button>
+            </div>
+          </div>
           <select
             value={sortBy}
             onChange={handleSort}
@@ -71,6 +91,8 @@ const AllRequest = () => {
           </select>
         </div>
       </div>
+      {/* New Request button */}
+
       {viewType === "table" ? (
         <Table requests={sortedRequests} />
       ) : (

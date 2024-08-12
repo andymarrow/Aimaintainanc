@@ -13,7 +13,7 @@ const SearchProblem = () => {
   );
 
   const handleClick = (id: Number) => {
-    router.push(`/searchProblem/${id}`);
+    router.push(`/api/searchProblem/${id}`);
   };
 
   return (

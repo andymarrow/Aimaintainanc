@@ -3,26 +3,26 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { TechnicianInfoComplitedjob } from "../(subsidebar)/data";
 
-export default function CompletedCards({ requests  }) {
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 3;
-    const totalPages = Math.ceil(requests.length / itemsPerPage);
-  
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const requestToBeRendered = requests.slice(startIndex, endIndex);
-    const router = useRouter();
-    const handleClick = (id: number) => {
-        router.push(`/api/item/completed/${id}`);
-      };
-  
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" >
+export default function CompletedCards({ requests }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3;
+  const totalPages = Math.ceil(requests.length / itemsPerPage);
 
-            {requestToBeRendered.map((job, index) => (
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const requestToBeRendered = requests.slice(startIndex, endIndex);
+  const router = useRouter();
+  const handleClick = (id: number) => {
+    router.push(`/dashboard/api/item/completed/${id}`);
+  };
+
+  return (
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {requestToBeRendered.map((job, index) => (
           <div
             key={index}
-            className="bg-slate-200 shadow-lg rounded-lg overflow-hidden" 
+            className="bg-slate-200 shadow-lg rounded-lg overflow-hidden"
           >
             <div className="p-6">
               <h2 className="text-lg font-bold mb-4 text-green-600 text-center">
@@ -70,8 +70,8 @@ export default function CompletedCards({ requests  }) {
             </div>
           </div>
         ))}
-
-<div className="flex justify-end mt-4">
+      </div>
+      <div className="flex justify-end mt-4">
         <button
           className="px-4 py-2 mx-1 bg-gray-200 text-gray-800 rounded"
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -103,6 +103,6 @@ export default function CompletedCards({ requests  }) {
           Next
         </button>
       </div>
-    </div>
-  )
+    </>
+  );
 }

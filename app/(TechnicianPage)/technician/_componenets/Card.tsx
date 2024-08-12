@@ -2,8 +2,7 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-const Card = ({ requests  }) => {
-
+const Card = ({ requests }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const totalPages = Math.ceil(requests.length / itemsPerPage);
@@ -17,32 +16,36 @@ const Card = ({ requests  }) => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 cursor-pointer">
-                {requestToBeRendered.map((requests, index) => (
-            <div className="bg-white shadow-md rounded-lg p-4 mb-4 border border-gray-200"  onClick={() => handleClick(requests.id)}>
-              <h2 className="text-xl font-bold mb-2">{requests.requesterName}</h2>
-              <p>
-                <strong>Request type:</strong> {requests.requestType}
-              </p>
-              <p>
-                <strong>Description:</strong> {requests.description}
-              </p>
-            
-              <span
-                className={`inline-block px-2 py-1 mt-2 text-xs font-semibold rounded-full ${
-                  requests.Urgency === "low"
-                    ? "bg-green-200 text-green-800"
-                    : requests.Urgency === "high"
-                    ? "bg-red-200 text-red-800"
-                    : "bg-yellow-200 text-yellow-800"
-                }`}
-              >
-                {requests.Urgency}
-              </span>
-            </div>
-        
-              ))}
-              <div className="flex justify-end mt-4">
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 cursor-pointer">
+        {requestToBeRendered.map((requests, index) => (
+          <div
+            className="bg-white shadow-md rounded-lg p-4 mb-4 border border-gray-200"
+            onClick={() => handleClick(requests.id)}
+          >
+            <h2 className="text-xl font-bold mb-2">{requests.requesterName}</h2>
+            <p>
+              <strong>Request type:</strong> {requests.requestType}
+            </p>
+            <p>
+              <strong>Description:</strong> {requests.description}
+            </p>
+
+            <span
+              className={`inline-block px-2 py-1 mt-2 text-xs font-semibold rounded-full ${
+                requests.Urgency === "low"
+                  ? "bg-green-200 text-green-800"
+                  : requests.Urgency === "high"
+                  ? "bg-red-200 text-red-800"
+                  : "bg-yellow-200 text-yellow-800"
+              }`}
+            >
+              {requests.Urgency}
+            </span>
+          </div>
+        ))}
+      </div>
+      <div className="flex justify-end mt-4">
         <button
           className="px-4 py-2 mx-1 bg-gray-200 text-gray-800 rounded"
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -74,7 +77,7 @@ const Card = ({ requests  }) => {
           Next
         </button>
       </div>
-      </div>
+    </>
   );
 };
 

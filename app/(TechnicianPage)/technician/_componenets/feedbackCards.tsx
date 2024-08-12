@@ -17,49 +17,51 @@ export default function FeedbackCards({ requests }) {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {requestToBeRendered.map((job, index) => (
-          <div key={index} className="bg-slate-200 shadow-md rounded-lg p-6">
-            <h2 className="text-3xl font-bold mb-4 text-green-600 text-center">
-              Rating: {job.EmployeeRating}/10
-            </h2>
-            <div className="grid grid-cols-2 gap-4 h-64 text-center">
-              <div className="flex flex-col">
-                <span className="font-medium">Technician Name</span>
-                <span>{job.technicianName}</span>
+    <>
+      <div className="container mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {requestToBeRendered.map((job, index) => (
+            <div key={index} className="bg-slate-200 shadow-md rounded-lg p-6">
+              <h2 className="text-3xl font-bold mb-4 text-green-600 text-center">
+                Rating: {job.EmployeeRating}/10
+              </h2>
+              <div className="grid grid-cols-2 gap-4 h-64 text-center">
+                <div className="flex flex-col">
+                  <span className="font-medium">Technician Name</span>
+                  <span>{job.technicianName}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-medium">Requestor Name</span>
+                  <span>{job.requesterName}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-medium">Given Date</span>
+                  <span>{job.GivenDate}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="font-medium">Finished Date</span>
+                  <span>{job.FinishedDate}</span>
+                </div>
               </div>
               <div className="flex flex-col">
-                <span className="font-medium">Requestor Name</span>
-                <span>{job.requesterName}</span>
+                <p className="font-medium">Comments:</p>
+                <span className="ml-4">{job.Comments}</span>
               </div>
               <div className="flex flex-col">
-                <span className="font-medium">Given Date</span>
-                <span>{job.GivenDate}</span>
+                <p className="font-medium">Employee Rating:</p>
+                <span className="ml-4">{job.EmployeeRating}</span>
               </div>
-              <div className="flex flex-col">
-                <span className="font-medium">Finished Date</span>
-                <span>{job.FinishedDate}</span>
+              <div className="flex justify-end mb-4">
+                <button
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl"
+                  onClick={() => handleClick(job.id)}
+                >
+                  More Details
+                </button>
               </div>
             </div>
-            <div className="flex flex-col">
-              <p className="font-medium">Comments:</p>
-              <span className="ml-4">{job.Comments}</span>
-            </div>
-            <div className="flex flex-col">
-              <p className="font-medium">Employee Rating:</p>
-              <span className="ml-4">{job.EmployeeRating}</span>
-            </div>
-            <div className="flex justify-end mb-4">
-              <button
-                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-xl"
-                onClick={() => handleClick(job.id)}
-              >
-                More Details
-              </button>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
       <div className="flex justify-end mt-4">
         <button
@@ -93,6 +95,6 @@ export default function FeedbackCards({ requests }) {
           Next
         </button>
       </div>
-    </div>
+    </>
   );
 }

@@ -5,6 +5,9 @@ import Table from "../../../_componenets/AdminComp/table";
 import { Sidebar } from "../../../_componenets/AdminComp/sidbar";
 import { requests } from "../../../data";
 function page() {
+  const filteredData = requests.filter(
+    (request) => request.status === "Activated"
+  );
   return (
     <div className="h-full">
       <div className="h-[80px] md:pl-60 fixed inset-y-0 w-full  top-0 z-50">
@@ -16,8 +19,8 @@ function page() {
       </div>
 
       <div className="pt-[80px] md:pl-60">
-        <div className="flex justify-center p-4">
-          <Table requests={requests} />
+        <div className="p-4">
+          <Table requests={filteredData} />
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 "use Client";
 import React, { useState } from "react";
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
   ArrowUpNarrowWide,
@@ -7,11 +8,17 @@ import {
   CirclePlus,
 } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { request } from "http";
 const Table = ({ requests }) => {
   //sorting
 
   const [sortedRequests, setSortedRequests] = useState(requests);
   const [isSortedAsc, setIsSortedAsc] = useState(true);
+
+  const filteredData = requests.filter(
+    (request) => request.status === "Activated"
+  );
 
   const handleSort = () => {
     const sorted = [...sortedRequests].sort((a, b) => {
@@ -52,6 +59,8 @@ const Table = ({ requests }) => {
   const handleClose = () => {
     setIsModalOpen(false);
   };
+  const pathname = usePathname();
+  const routeString = pathname.split("/admin/").pop();
 
   return (
     <div className="overflow-x-auto ${isModalOpen ? 'blur-md' : ''}` ">
@@ -92,7 +101,15 @@ const Table = ({ requests }) => {
                   className="w-full p-2 border border-gray-300 rounded-lg"
                 />
               </div>
-
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
+              </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
                   Department
@@ -108,13 +125,15 @@ const Table = ({ requests }) => {
 
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Role
+                  Select Role
                 </label>
-                <input
-                  type="text"
-                  placeholder="head or employee"
-                  className="w-full p-2 border border-gray-300 rounded-lg"
-                />
+                <select className="w-full p-2 border border-gray-300 rounded-lg">
+                  <option value="Administrator">Administrator</option>
+                  <option value="Employee">Employee</option>
+                  <option value="DepartmentHead">Department Head</option>
+                  <option value="MaintenanceHead">Maintenance Head</option>
+                  <option value="Teachnician">Technician</option>
+                </select>
               </div>
 
               <div className="flex justify-end">
@@ -143,28 +162,36 @@ const Table = ({ requests }) => {
             {isSortedAsc ? <ArrowDownWideNarrow /> : <ArrowUpNarrowWide />}
           </button>
         </div>
-        <div className=" flex flex-row bg-blue-950 rounded-md w-20">
-          <div className="text-gray-200" onClick={handleAddClick}>
-            <CirclePlus />
+        {routeString === "Deactivated" ? (
+          " "
+        ) : (
+          <div
+            className=" flex flex-row right-0 bg-blue-950 rounded-lg w-fit  mb-8 p-2"
+            onClick={handleAddClick}
+          >
+            <div className="text-gray-200 text-center">
+              <Plus />
+            </div>
+            <div>
+              <Link href={""}>
+                <button className=" text-gray-200 items-end flex-row ">
+                  ADD
+                </button>
+              </Link>
+            </div>
           </div>
-          <div>
-            <Link href={""}>
-              <button className=" text-gray-200 items-end flex-row ">
-                ADD
-              </button>
-            </Link>
-          </div>
-        </div>
+        )}
       </div>
       <table className="min-w-full bg-white border border-gray-200 ">
         <thead>
           <tr>
-            <th className="py-2 px-4">ID</th>
-            <th className="py-2 px-4">User Name</th>
-            <th className="py-2 px-4">Email</th>
-            <th className="py-2 px-4">Password</th>
-            <th className="py-2 px-4">Department</th>
-            <th className="py-2 px-4">Role</th>
+            <th className="py-2 px-4 text-left">ID</th>
+            <th className="py-2 px-4 text-left">User Name</th>
+            <th className="py-2 px-4 text-left">Email</th>
+            <th className="py-2 px-4 text-left">Password</th>
+            <th className="py-2 px-4 text-left">Department</th>
+            <th className="py-2 px-4 text-left">Role</th>
+            <th className="py-2 px-4 text-left">Status</th>
           </tr>
         </thead>
         <tbody>
@@ -178,7 +205,7 @@ const Table = ({ requests }) => {
               <td className="py-2 px-4">{request.role}</td>
               <td className="py-2 px-4">
                 <button
-                  onClick={() => handleButtonClick(request.id)}
+                  // onClick={() => handleButtonClick(request.id)}
                   className={`inline-block px-2 py-1 text-xs font-semibold rounded-full 
                      hover:shadow-lg ${
                        request.status === "Activated"

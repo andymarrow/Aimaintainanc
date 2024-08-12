@@ -30,7 +30,7 @@ function ForgotPassword() {
               id="email"
             />
             {/*button*/}
-            <button className="w-1/2 p-2 bg-orange-500 text-white rounded-lg">
+            <button className="w-full p-2 bg-orange-500 text-white rounded-lg">
               Reset Password
             </button>
           </div>

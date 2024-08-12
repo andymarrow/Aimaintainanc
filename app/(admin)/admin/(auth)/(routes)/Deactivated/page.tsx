@@ -19,7 +19,7 @@ function page() {
       </div>
 
       <div className="pt-[80px] md:pl-60">
-        <div className="flex justify-center p-4">
+        <div className=" p-4">
           <DepTable requests={deactivated} />
         </div>
       </div>

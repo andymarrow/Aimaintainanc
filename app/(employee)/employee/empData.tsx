@@ -263,3 +263,38 @@ export const requests = [
 
 
 ];
+
+export const searchResults = [
+  {
+    id: 1,
+    title: "How to Fix a Leaking Pipe",
+    link: "https://example.com/fix-leaking-pipe",
+    type: "Website",
+    Description:
+      "A leaking pipe can cause significant water damage. This guide provides step-by-step instructions on identifying the leak, turning off the water supply, and using a pipe patch kit or replacement pipe to fix the leak.",
+  },
+  {
+    id: 2,
+    title: "Repairing a Broken Window",
+    link: "https://example.com/repair-window",
+    type: "Website",
+    Description:
+      "A broken window can be a security risk and reduce your home's energy efficiency. This article explains how to remove broken glass safely, prepare the window frame, and install new glass or plexiglass.",
+  },
+  {
+    id: 3,
+    title: "How to Unclog a Drain",
+    link: "https://example.com/unclog-drain",
+    type: "Website",
+    Description:
+      "Clogged drains can be frustrating. This guide outlines methods to unclog drains using tools like a plunger, drain snake, or chemical drain cleaner, along with preventative tips.",
+  },
+  {
+    id: 4,
+    title: "Fixing a Leaking Roof",
+    link: "https://www.youtube.com/watch?v=example",
+    type: "Video",
+    Description:
+      "Roof leaks can lead to structural damage if not addressed promptly. This video tutorial shows how to locate the source of the leak, patch damaged shingles, and apply waterproof sealant to prevent further leaks.",
+  },
+];

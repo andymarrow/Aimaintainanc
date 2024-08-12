@@ -1,13 +1,13 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { requests } from "../../data";
+import { requests } from "../../../data";
 import { useState } from "react";
 
 const RequestDetail = () => {
   const [showHighForm, setShowHighForm] = useState(false);
 
   const pathname = usePathname();
-  const idString = pathname.split("/").pop();
+  const idString = pathname.split("/statusId/").pop();
 
   if (!idString) return <p>Request Not Found.</p>;
 
@@ -57,7 +57,7 @@ const RequestDetail = () => {
           <strong>Device Type:</strong> {request.deviceType}
         </p>
         <p>
-          <strong>Phone Number:</strong> {request.phoneNumber}
+          <strong>Phone Number:</strong> {request.phoneNo}
         </p>
         <p>
           <strong>Email:</strong> {request.email}
@@ -66,7 +66,7 @@ const RequestDetail = () => {
           <strong>Status:</strong> {request.status}
         </p>
 
-        {request.status === "inprogress" && (
+        {request.status === "InProgress" && (
           <div className="mt-4">
             <button
               className="bg-green-500 text-white px-4 py-2 rounded mr-2"

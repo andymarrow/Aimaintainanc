@@ -26,7 +26,7 @@ const guestRoutes = [
   },
   {
     icon: ShieldMinus,
-    label: "Removed Accounts",
+    label: "Deactivated User",
     href: "/admin/Deactivated",
   },
 

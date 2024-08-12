@@ -8,6 +8,7 @@ import {
   Search,
   ClipboardList,
   LogOut,
+  Settings,
 } from "lucide-react";
 import { SidebarItem } from "./sidebar-item";
 
@@ -15,7 +16,7 @@ const guestRoutes = [
   {
     icon: ClipboardList,
     label: "All Request",
-    href: "/department",
+    href: "/department/allRequest",
   },
   {
     icon: CheckSquare,
@@ -41,6 +42,11 @@ const guestRoutes = [
     icon: Search,
     label: "Problem Search",
     href: "/department/problem_search",
+  },
+  {
+    icon: Settings,
+    label: "Settings",
+    href: "/department/settings",
   },
   {
     icon: LogOut,

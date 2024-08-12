@@ -14,7 +14,7 @@ const Card = ({ requests }) => {
   const requestToBeRendered = requests.slice(startIndex, endIndex);
 
   const handleClick = (id: Number) => {
-    router.push(`/approvalState/${id}`);
+    router.push(`/department/api/statusId/${id}`);
   };
 
   return (
