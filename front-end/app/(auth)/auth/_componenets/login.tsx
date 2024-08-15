@@ -1,6 +1,7 @@
+"use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 function Login() {
   const [password, setPassword] = useState(" ");
@@ -12,31 +13,31 @@ function Login() {
     event.preventDefault();
 
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch("http://localhost:3002/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
       });
+      const data = await response.json();
 
-      if (response.ok) {
-        const data = await response.json();
+      if (data) {
         switch (data.role) {
           case "admin":
-            router.push("/admin");
+            router.push("/admin/dashboard");
             break;
           case "employee":
-            router.push("/employee");
+            router.push("/employee/emp_dashb");
             break;
           case "deparment_head":
-            router.push("/department_head");
+            router.push("/department/allRequest");
             break;
           case "maintenance_head":
-            router.push("/maintenance_head");
+            router.push("/dashboard/dashboardHome");
             break;
           case "technician":
-            router.push("/technician");
+            router.push("/technician/allHistory");
             break;
           default:
             router.push("/");

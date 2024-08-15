@@ -36,6 +36,8 @@ const Table = ({ requests }) => {
 
   //pagintion
   const router = useRouter();
+  const pathname = usePathname();
+  const routeString = pathname.split("/admin/").pop();
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
@@ -59,8 +61,43 @@ const Table = ({ requests }) => {
   const handleClose = () => {
     setIsModalOpen(false);
   };
-  const pathname = usePathname();
-  const routeString = pathname.split("/admin/").pop();
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target as HTMLFormElement);
+
+    const data = {
+      username: formData.get("username") as string,
+      email: formData.get("email") as string,
+      department: formData.get("department") as string,
+      password: formData.get("password") as string,
+      role: formData.get("role") as string,
+      phoneNumber: formData.get("phoneNumber") as string,
+    };
+
+    try {
+      console.log(data);
+      const response = await fetch("http://localhost:3002/api/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        alert("user registration successful");
+        setIsModalOpen(false);
+      } else {
+        const errorMessage = await response.text();
+        alert("User registration failed" + errorMessage);
+      }
+    } catch (err) {
+      console.error(`Error: ` + err);
+    }
+  };
 
   return (
     <div className="overflow-x-auto ${isModalOpen ? 'blur-md' : ''}` ">
@@ -69,14 +106,15 @@ const Table = ({ requests }) => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-xl font-bold mb-4">Add User</h2>
 
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
                   Username
                 </label>
                 <input
                   type="text"
-                  placeholder="Full Name"
+                  placeholder="username"
+                  name="username"
                   className="w-full p-2 border border-gray-300 rounded-lg"
                 />
               </div>
@@ -88,6 +126,18 @@ const Table = ({ requests }) => {
                 <input
                   type="email"
                   placeholder="some@gmail.com"
+                  name="email"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  placeholder="09-17-3356"
+                  name="phoneNumber"
                   className="w-full p-2 border border-gray-300 rounded-lg"
                 />
               </div>
@@ -98,6 +148,7 @@ const Table = ({ requests }) => {
                 </label>
                 <input
                   type="password"
+                  name="password"
                   className="w-full p-2 border border-gray-300 rounded-lg"
                 />
               </div>
@@ -114,7 +165,10 @@ const Table = ({ requests }) => {
                 <label className="block text-sm font-medium text-gray-700">
                   Department
                 </label>
-                <select className="w-full p-2 border border-gray-300 rounded-lg">
+                <select
+                  name="department"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                >
                   <option value="software">Software Department</option>
                   <option value="hr">HR Department</option>
                   <option value="maintenance">Maintenance Department</option>
@@ -127,12 +181,15 @@ const Table = ({ requests }) => {
                 <label className="block text-sm font-medium text-gray-700">
                   Select Role
                 </label>
-                <select className="w-full p-2 border border-gray-300 rounded-lg">
-                  <option value="Administrator">Administrator</option>
-                  <option value="Employee">Employee</option>
-                  <option value="DepartmentHead">Department Head</option>
-                  <option value="MaintenanceHead">Maintenance Head</option>
-                  <option value="Teachnician">Technician</option>
+                <select
+                  name="role"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                >
+                  <option value="admin">Administrator</option>
+                  <option value="employee">Employee</option>
+                  <option value="department_head">Department Head</option>
+                  <option value="maintenance_head">Maintenance Head</option>
+                  <option value="technician">Technician</option>
                 </select>
               </div>
 

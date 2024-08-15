@@ -14,12 +14,15 @@ datasource db {
 }
 
 model user {
-  user_id              Int      @id @default(autoincrement())
-  username             String   @unique @db.VarChar(255)
-  email                String   @unique @db.VarChar(255)
-  password             String   @db.VarChar(255)
+  User_id              Int      @id @default(autoincrement())
+  Username             String   @unique @db.VarChar(255)
+  Email                String   @unique @db.VarChar(255)
+  Password             String   @db.VarChar(255)
+  PhoneNumber          String   @db.VarChar(255)
   Role                 Role     
-  Created_at DateTime @default(now()) @db.Timestamp(6)
+  Department           String  @db.VarChar(255)
+  Created_at           DateTime @default(now())    @db.Timestamp(6)
+  Current_State        String  @default("Active")  @db.VarChar(255)
 }
 
 enum Role {
