@@ -8,7 +8,7 @@ export const newUser = async (req: Request, res: Response) => {
   const { username, email, password, phoneNumber, role, department } = req.body;
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hashSync(password, 10);
 
     const user = await prisma.user.create({
       data: {

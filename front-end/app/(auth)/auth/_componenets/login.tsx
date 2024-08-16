@@ -22,7 +22,8 @@ function Login() {
       });
       const data = await response.json();
 
-      if (data) {
+      if (data && data.user) {
+        const { role } = data.user;
         switch (data.role) {
           case "admin":
             router.push("/admin/dashboard");
