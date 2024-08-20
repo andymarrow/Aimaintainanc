@@ -6,13 +6,13 @@ export const NavbarRoutes = () => {
     const pathname = usePathname();
 
     // Extract the current page from the pathname
-    const currentPage = pathname.substring(1); // Remove leading slash
+    //const currentPage = pathname.substring(1); // Remove leading slash
 
     return (
         <div className="flex justify-between items-center space-y-10 ">
             {/* Display the current page on the far left */}
             <div className="text-lg font-bold text-gray-700">
-                {currentPage || "Emp"}
+                {/* {currentPage || "Emp"} */}
             </div>
 
             {/* Glowing search bar on the far right */}

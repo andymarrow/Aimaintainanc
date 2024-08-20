@@ -176,7 +176,7 @@ const handleClickRoute = (id: Number) => {
 
 
       {/* Modal for completed button */}
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded shadow-lg">
             <h2 className="text-2xl mb-4">Completed Request Details</h2>
@@ -188,7 +188,7 @@ const handleClickRoute = (id: Number) => {
             </button>
           </div>
         </div>
-      )}
+      )} */}
 
 
 

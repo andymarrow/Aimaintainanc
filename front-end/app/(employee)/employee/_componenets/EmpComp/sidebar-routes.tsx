@@ -26,7 +26,7 @@ const guestRoutes = [
   },
   {
     icon: Search,
-    label: "Problem Search",
+    label: "Help Desk",
     href: "/employee/SearchProblem",
   },
 

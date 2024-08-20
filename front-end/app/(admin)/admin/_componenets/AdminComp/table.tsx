@@ -2,37 +2,46 @@
 import React, { useState } from "react";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import {
-  ArrowUpNarrowWide,
-  ArrowDownWideNarrow,
-  CirclePlus,
-} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { request } from "http";
 const Table = ({ requests }) => {
   //sorting
 
-  const [sortedRequests, setSortedRequests] = useState(requests);
-  const [isSortedAsc, setIsSortedAsc] = useState(true);
+  const [sortBy, setSortBy] = useState("department");
+  const sortedRequests =requests.slice().sort((a, b) => {
+    if (sortBy === "username") {
+      return (a.username || "").localeCompare(b.username || "");
+    } else if (sortBy === "department") {
+      return a.department.localeCompare(b.department);
+    } 
+    return 0;
+  });
+  const handleSort = (e) => {
+    const sortField = e.target.value;
+    setSortBy(sortField);
+  };
+
+  // const [sortedRequests, setSortedRequests] = useState(requests);
+
 
   const filteredData = requests.filter(
     (request) => request.status === "Activated"
   );
 
-  const handleSort = () => {
-    const sorted = [...sortedRequests].sort((a, b) => {
-      const depA = a.department.toLowerCase();
-      const depB = b.department.toLowerCase();
-      if (isSortedAsc) {
-        return depA > depB ? 1 : -1;
-      } else {
-        return depA < depB ? 1 : -1;
-      }
-    });
-    setSortedRequests(sorted);
-    setIsSortedAsc(!isSortedAsc);
-  };
+  // const handleSort = () => {
+  //   const sorted = [...sortedRequests].sort((a, b) => {
+  //     const depA = a.department.toLowerCase();
+  //     const depB = b.department.toLowerCase();
+  //     if (isSortedAsc) {
+  //       return depA > depB ? 1 : -1;
+  //     } else {
+  //       return depA < depB ? 1 : -1;
+  //     }
+  //   });
+  //   setSortedRequests(sorted);
+  //   setIsSortedAsc(!isSortedAsc);
+  // };
 
   //pagintion
   const router = useRouter();
@@ -214,10 +223,15 @@ const Table = ({ requests }) => {
       )}
 
       <div className="flex flex-row  justify-between">
-        <div>
-          <button onClick={handleSort}>
-            {isSortedAsc ? <ArrowDownWideNarrow /> : <ArrowUpNarrowWide />}
-          </button>
+      <div>
+          <select
+            value={sortBy}
+            onChange={handleSort}
+            className="border border-gray-300 p-2 rounded-lg"
+          >
+            <option value="department">Sort by Department</option>
+            <option value="username">Sort by User Name</option>
+          </select>
         </div>
         {routeString === "Deactivated" ? (
           " "

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 function Login() {
-  const [password, setPassword] = useState(" ");
+  const [password, setPassword] = useState("");
   const [username, setUsername] = useState(" ");
 
   const router = useRouter();
@@ -52,7 +52,7 @@ function Login() {
   };
   return (
     <>
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center ">
         <form
           className=" w-96 bg-white bg-opacity-10 backdrop-filter 
         backdrop-blur-lg  border border-opacity-30 border-white shadow-lg-white p-6 rounded-lg"
@@ -64,12 +64,12 @@ function Login() {
 
           {/*username*/}
           <div className="mb-2">
-            <label className="block mb-2 text-sm font-medium text-gray-700">
+            <label  className="block mb-2 text-sm font-medium text-gray-700" >
               Username
             </label>
             <input
-              className="w-full p-2 border border-gray-300 rounded-lg "
-              placeholder="username"
+              className="w-full  placeholer:italic  p-2 border border-gray-300 rounded-lg "
+              placeholder="UserName"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -82,23 +82,23 @@ function Login() {
               Password
             </label>
             <input
-              className="w-full p-2 border border-gray-300 rounded-lg"
+              className="w-full p-2 border placeholder:italic border-gray-300 rounded-lg"
               type="password"
-              placeholder="password"
+              placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
           {/*Remeber me*/}
-          <div className=" flex mb-2">
-            <label className="">
-              <input
+          <div className=" flex  flex-row mb-2">
+            
+              <div className=""><input
                 type="checkbox"
                 className="form-checkbox h-3 w-3 border-gray-300 rounded"
-              />
-              <span className="text-xs ">Remember Me</span>
-            </label>
+              /></div>
+              <div className="pl-4"><span className="text-xs ">Remember Me</span></div>
+            
           </div>
 
           {/*button*/}
@@ -110,15 +110,18 @@ function Login() {
             Login
           </button>
 
-          {/*Forgot password*/}
-          <div className="flex justify-center w-full p-4 text-xs text-blue-950">
-            <Link href={"/auth/ForgotPassword"}>Forgot Password?</Link>
-          </div>
+         <div className="flex flex-row justify-around pt-3">
+            {/*Forgot password*/}
+            <div className=" text-xs text-blue-950">
+              <Link href={"/auth/ForgotPassword"}>Forgot Password?</Link>
+            </div>
 
-          {/*Terms and conditions, support*/}
-          <div className="flex justify-center pt-2">
-            <span className="text-xs text-blue-950"> Support</span>
-          </div>
+            {/*Terms and conditions, support*/}
+            <div className=" flex">
+              <span className="text-xs text-blue-950"> Support</span>
+            </div>
+            
+          </div>  
         </form>
       </div>
     </>
