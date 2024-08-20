@@ -14,20 +14,20 @@ export const loginUser = async (req: Request, res: Response) => {
   // console.log(user1);
 
   const user = await prisma.user.findUnique({
-    where: { Username: username },
+    where: { username: username },
   });
   console.log(user);
 
   try {
     const user = await prisma.user.findUnique({
-      where: { Username: username },
+      where: { username: username },
     });
 
     if (!user) {
       return res.status(401).json({ message: "Invalid user." });
     }
     if (user) {
-      const isMatch = await bcrypt.compare(password, user.Password);
+      const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
         return res.status(401).json({ message: "Invalid password." });
@@ -39,13 +39,13 @@ export const loginUser = async (req: Request, res: Response) => {
         throw new Error("No token key is specified in environment variable");
       }
       const token = jwt.sign(
-        { userId: user.User_id, role: user.Role },
+        { userId: user.user_id, role: user.role },
         secret,
         {
           expiresIn: "1h",
         }
       );
-      res.json({ user: { username: user.Username, role: user.Role }, token });
+      res.json({ user: { username: user.username, role: user.role }, token });
     }
   } catch (err) {
     console.error(err);
