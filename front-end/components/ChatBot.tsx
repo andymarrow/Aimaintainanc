@@ -3,6 +3,11 @@
 import { useState } from "react";
 import { FiMessageCircle, FiSend, FiMic, FiMicOff, FiX, FiTrash2, FiVolumeX, FiVolume2 } from "react-icons/fi";
 import { handleChatbotMessage } from "../../back-end/controllers/routingUtils"; // Adjust the import path as needed
+import { useRouter } from "next/navigation";
+
+
+
+
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -13,6 +18,11 @@ export default function ChatBot() {
 
   let recognition = null;
   let SpeechSynthesis = null;
+
+  // Add states for username and password
+const [username, setUsername] = useState("");
+const [password, setPassword] = useState("");
+const router = useRouter();
 
   if (typeof window !== "undefined") {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -27,6 +37,9 @@ export default function ChatBot() {
       const transcript = event.results[0][0].transcript;
       setMessage(transcript);
       setIsActive(false);
+
+
+  // handleVoiceCommand(transcript); // Handle the voice command for login
     };
 
     recognition.onspeechend = () => {
@@ -48,6 +61,68 @@ export default function ChatBot() {
       SpeechSynthesis.speak(utterance);
     }
   };
+
+
+
+  // const handleVoiceCommand = (transcript) => {
+  //   const response = handleChatbotMessage(transcript);
+  
+  //   if (response.startsWith("Got it,")) {
+  //     const extractedUsername = transcript.toLowerCase().replace("my username is", "").trim();
+  //     setUsername(extractedUsername);
+  //   } else if (response.startsWith("Logging you in")) {
+  //     const extractedPassword = transcript.toLowerCase().replace("my password is", "").trim();
+  //     setPassword(extractedPassword);
+  //     handleSubmit(); // Trigger the login process after receiving the password
+  //   }
+  
+  //   // Speak the response
+  //   speak(response);
+  
+  //   // Add bot response to chat history
+  //   setChatHistory(prevChatHistory => [
+  //     ...prevChatHistory,
+  //     { sender: "bot", text: response }
+  //   ]);
+  // };
+
+
+//   const handleSubmit = async () => {
+//   try {
+//     const response = await fetch("http://localhost:3002/api/auth/login", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ username, password }),
+//     });
+//     const data = await response.json();
+
+//     if (data && data.user) {
+//       document.cookie = `authToken=${data.token}; path=/;`;
+//       const { role } = data.user;
+
+//       switch (role) {
+//         case "admin":
+//           router.push("/admin/dashboard");
+//           break;
+//         case "employee":
+//           router.push("/employee/emp_dashboard");
+//           break;
+//         // Add cases for other roles...
+//         default:
+//           router.push("/");
+//       }
+//     } else {
+//       speak("Credentials are wrong. Please try again.");
+//     }
+//   } catch (error) {
+//     console.error("Login error:", error);
+//     speak("An error occurred while trying to log you in.");
+//   }
+// };
+
+
 
   const handleOnRecord = () => {
     if (isActive) {

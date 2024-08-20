@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GetServerSideProps } from "next";
-
+import ChatBot from '../../../../components/ChatBot'
 function Login() {
   const [password, setPassword] = useState(" ");
   const [username, setUsername] = useState(" ");
@@ -82,6 +82,7 @@ function Login() {
               className="w-full p-2 border border-gray-300 rounded-lg "
               placeholder="username"
               type="text"
+              id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -95,6 +96,7 @@ function Login() {
             <input
               className="w-full p-2 border border-gray-300 rounded-lg"
               type="password"
+               id="password"
               placeholder="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
