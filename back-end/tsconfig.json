@@ -99,14 +99,8 @@
     "typeRoots": [
       "./node_modules/@types",
       "./types"
-    ],
-    "types": [
-      "node",
-      "express"
-    ],
+    ]
   },
-  "include": [
-    "src/**/*.ts",
-    "types/**/*.d.ts"
-  ]
+  "include": ["./**/*.ts", "./types.d.ts"], // Include all TypeScript files and the types file
+  "exclude": ["node_modules"]
 }

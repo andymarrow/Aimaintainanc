@@ -12,7 +12,7 @@ function Login() {
   // Clear session or tokens on component mount
   useEffect(() => {
     // Clear auth token cookie
-    document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    // document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     setUsername(""); // Clear username state
     setPassword(""); // Clear password state
   }, []);

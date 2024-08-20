@@ -3,12 +3,16 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
+import cookieParser from "cookie-parser";
 import { handleChatbotMessage } from "./controllers/chatbotIntents";
 import * as dotenv from 'dotenv';
 
 require("dotenv").config();
 
 const app = express();
+
+app.use(cookieParser()); // To parse cookies in request
+app.use(express.json()); // To parse JSON bodies
 
 app.use(cors());
 app.use(bodyParser.json());
