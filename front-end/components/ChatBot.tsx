@@ -1,8 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { FiMessageCircle, FiSend, FiMic, FiMicOff, FiX, FiTrash2, FiVolumeX, FiVolume2 } from "react-icons/fi";
+import {
+  FiMessageCircle,
+  FiSend,
+  FiMic,
+  FiMicOff,
+  FiX,
+  FiTrash2,
+  FiVolumeX,
+  FiVolume2,
+} from "react-icons/fi";
 import { handleChatbotMessage } from "../../back-end/controllers/routingUtils"; // Adjust the import path as needed
+
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -11,38 +21,42 @@ export default function ChatBot() {
   const [isMuted, setIsMuted] = useState(false); // New state for mute
   const language = "en-US";
 
-  let recognition = null;
-  let SpeechSynthesis = null;
+  let recognition: SpeechRecognition | undefined;
+  let SpeechSynthesis: SpeechSynthesis | undefined;
 
   if (typeof window !== "undefined") {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
     SpeechSynthesis = window.speechSynthesis;
 
-    recognition = new SpeechRecognition();
-    recognition.lang = language;
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.lang = language;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
 
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setMessage(transcript);
-      setIsActive(false);
-    };
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setMessage(transcript);
+        setIsActive(false);
+      };
 
-    recognition.onspeechend = () => {
-      recognition.stop();
-      setIsActive(false);
-    };
+      recognition.onspeechend = () => {
+        recognition?.stop();
+        setIsActive(false);
+      };
 
-    recognition.onerror = (event) => {
-      console.error("Speech recognition error:", event.error);
-      setIsActive(false);
-    };
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        setIsActive(false);
+      };
+    } else {
+      console.error("SpeechRecognition API is not supported in this browser.");
+    }
   }
 
   // Function to speak the response using SpeechSynthesis
   const speak = (text: string) => {
-    if (typeof SpeechSynthesis !== 'undefined' && !isMuted) {
+    if (SpeechSynthesis && !isMuted) {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = language;
       SpeechSynthesis.speak(utterance);
@@ -51,10 +65,10 @@ export default function ChatBot() {
 
   const handleOnRecord = () => {
     if (isActive) {
-      recognition.stop();
+      recognition?.stop();
       closeSynthesis();
     } else {
-      recognition.start();
+      recognition?.start();
     }
     setIsActive(!isActive);
   };
@@ -64,7 +78,7 @@ export default function ChatBot() {
     closeSynthesis();
   };
 
-  const handleMessageChange = (e) => {
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
   };
 
@@ -94,7 +108,6 @@ export default function ChatBot() {
           { sender: "bot", text: data.response },
         ]);
 
-
         // Speak the response if not muted
         speak(data.response);
       } catch (error) {
@@ -116,7 +129,7 @@ export default function ChatBot() {
     if (SpeechSynthesis) {
       SpeechSynthesis.cancel();
     }
-  }
+  };
 
   const clearChatHistory = () => {
     setChatHistory([]);
@@ -147,14 +160,14 @@ export default function ChatBot() {
               chatHistory.map((chat, index) => (
                 <div
                   key={index}
-                  className={`flex ${chat.sender === "user" ? "justify-end" : "justify-start"
-                    }`}
+                  className={`flex ${
+                    chat.sender === "user" ? "justify-end" : "justify-start"
+                  }`}
                 >
                   <div
-                    className={`${chat.sender === "user"
-                      ? "bg-blue-500"
-                      : "bg-gray-500"
-                      } text-white p-2 rounded-lg max-w-xs mt-2`}
+                    className={`${
+                      chat.sender === "user" ? "bg-blue-500" : "bg-gray-500"
+                    } text-white p-2 rounded-lg max-w-xs mt-2`}
                   >
                     <p>{chat.text}</p>
                   </div>
@@ -192,8 +205,11 @@ export default function ChatBot() {
             </button>
             <button
               onClick={toggleMute}
-              className={`m-2 p-2 text-white text-center items-center rounded-lg ${isMuted ? "bg-gray-600 hover:bg-gray-700" : "bg-blue-600 hover:bg-blue-700"
-                } transition-all transform hover:scale-105 focus:outline-none`}
+              className={`m-2 p-2 text-white text-center items-center rounded-lg ${
+                isMuted
+                  ? "bg-gray-600 hover:bg-gray-700"
+                  : "bg-blue-600 hover:bg-blue-700"
+              } transition-all transform hover:scale-105 focus:outline-none`}
             >
               {isMuted ? <FiVolumeX size={20} /> : <FiVolume2 size={20} />}
             </button>
