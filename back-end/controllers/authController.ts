@@ -1,47 +1,64 @@
 import { Request, Response } from "express";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 export const loginUser = async (req: Request, res: Response) => {
-  const { username } = req.body;
+  const { username, password } = req.body;
   const trimmedUsername = username.trim();
-  console.log('Received Credentials:', { username: trimmedUsername });
+  console.log(req.body);
+
+  // const user1 =
+  //   // await prisma.$queryRaw`select * from user Where Username = 'amaya'`;
+  // console.log(user1);
+  console.log(username);
+  const user = await prisma.user.findUnique({
+    where: { Username: trimmedUsername },
+  });
+  console.log(user);
 
   try {
-    // Retrieve user from the database
     const user = await prisma.user.findUnique({
-      where: { Username: trimmedUsername },
+      where: { Username: username },
     });
 
-    console.log('Retrieved User:', user);
-
-    // Check if user exists
     if (!user) {
-      return res.status(401).json({ message: "Invalid user." });
+      console.log("User not found:", username);
+      return res.status(401).json({ message: "Invalid username or password." });
     }
 
-    // JWT secret
-    const secret = process.env.JWT_KEY as string;
+    if (user) {
+      const isMatch = await bcrypt.compare(password, user.Password);
+      console.log("Password comparison:", isMatch);
 
-    if (!secret) {
-      throw new Error("No token key is specified in environment variable");
+      if (!isMatch) {
+        return res.status(401).json({ message: "Invalid password." });
+      }
+
+      const secret = process.env.JWT_KEY as string;
+
+      if (!secret) {
+        throw new Error("No token key is specified in environment variable");
+      }
+      const token = jwt.sign(
+        { userId: user.User_id, role: user.Role },
+        secret,
+        {
+          expiresIn: "1h",
+        }
+      );
+      console.log("username:", user.Username, "role:", user.Role)
+
+      // Set token in HTTP-only cookie
+      res.setHeader('Set-Cookie', `authToken=${token}; HttpOnly; Path=/; Max-Age=3600`);
+
+
+      res.json({ user: { username: user.Username, role: user.Role }, token });
     }
-
-    // Create JWT token
-    const token = jwt.sign(
-      { userId: user.User_id, role: user.Role },
-      secret,
-      { expiresIn: "1h" }
-    );
-
-    console.log("username:", user.Username, "role:", user.Role);
-    res.json({ user: { username: user.Username, role: user.Role }, token });
-
   } catch (err) {
-    console.error('Error:', err);
-    const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
-    res.status(500).json({ message: "Server error", error: errorMessage });
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 };

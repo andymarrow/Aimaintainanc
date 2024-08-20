@@ -1,13 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { GetServerSideProps } from "next";
 
 function Login() {
   const [password, setPassword] = useState(" ");
   const [username, setUsername] = useState(" ");
 
   const router = useRouter();
+  // Clear session or tokens on component mount
+  useEffect(() => {
+    // Clear auth token cookie
+    document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    setUsername(""); // Clear username state
+    setPassword(""); // Clear password state
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -23,13 +31,15 @@ function Login() {
       const data = await response.json();
 
       if (data && data.user) {
+        // Store token in a cookie
+        document.cookie = `authToken=${data.token}; path=/;`;
         const { role } = data.user;
-        switch (data.role) {
+        switch (role) {
           case "admin":
             router.push("/admin/dashboard");
             break;
           case "employee":
-            router.push("/employee/emp_dashb");
+            router.push("/employee/emp_dashboard");
             break;
           case "deparment_head":
             router.push("/department/allRequest");
@@ -125,5 +135,44 @@ function Login() {
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { req } = context;
+  const token = req.cookies['authToken'];
+
+  if (!token) {
+    return { redirect: { destination: '/login', permanent: false } };
+  }
+
+  try {
+    const response = await fetch('http://localhost:3002/api/auth/role', {
+      headers: { Cookie: `authToken=${token}` },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch role');
+    }
+
+    const data = await response.json();
+    const { role } = data;
+
+    switch (role) {
+      case 'admin':
+        return { redirect: { destination: '/admin/dashboard', permanent: false } };
+      case 'employee':
+        return { redirect: { destination: '/employee/emp_dashboard', permanent: false } };
+      case 'department':
+        return { redirect: { destination: '/department/allRequest', permanent: false } };
+      case 'maintenance':
+        return { redirect: { destination: '/dashboard/dashboardHome', permanent: false } };
+      case 'technician':
+        return { redirect: { destination: '/technician/allHistory', permanent: false } };
+      default:
+        return { redirect: { destination: '/', permanent: false } };
+    }
+  } catch {
+    return { redirect: { destination: '/auth/Home', permanent: false } };
+  }
+};
 
 export default Login;
