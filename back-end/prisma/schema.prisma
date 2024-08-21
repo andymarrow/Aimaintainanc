@@ -26,6 +26,7 @@ model user {
   TechnicianMaintenanceRequests MaintenanceRequest[] @relation("TechnicianMaintenanceRequests")
   MaintenanceAssignments Assignment[] @relation("TechnicianAssignments")
   FeedbackGiven      Feedback[] @relation("EmployeeFeedbacks")
+  completionConfirmation        completionConfirmation[] @relation("completionLetterByTechnician")
 }
 
 model department {
@@ -47,10 +48,10 @@ model MaintenanceRequest {
   model_no           String
   description        String
   phone_number       String
-  status             Status   @default(Pending)
+  status             Status   @default(In_Progress)
   priority           Priority
   created_at         DateTime  @default(now())
-  updated_at         DateTime  @updatedAt
+  updated_at         DateTime  @default(now())@updatedAt
   employee_id        Int  
   department_head_id Int
   maintenance_head_id Int
@@ -65,6 +66,7 @@ model MaintenanceRequest {
   // Relations
   Feedbacks         Feedback[] @relation("MaintenanceRequestFeedbacks")
   Assignments         AssignmentOnRequest[]  @relation("MaintenanceRequestAssignments")
+  completionConfirmations  completionConfirmation @relation("MaintenanceRequestConfirmation") //
 }
 
 model Feedback {
@@ -82,12 +84,24 @@ model Assignment {
   assignment_id       Int       @id @default(autoincrement())
   assigned_at         DateTime  @default(now())
   completed_at        Boolean   @default(false)
-  work_load           Int       @default(1)
+  work_load           Int       @default(0)
   request_id          Int   
   technician_id       Int     
   user                user               @relation("TechnicianAssignments", fields: [technician_id], references: [user_id], map: "AssignmentTechnician_fkey")
   Requests       AssignmentOnRequest[]   @relation("AssignmentOnRequest")
 
+}
+
+model completionConfirmation {
+  confirmation_id     Int        @id @default(autoincrement())
+  finished_at         DateTime   @default(now())
+  given_at            DateTime   @default(now())
+  request_id          Int
+  technician_id       Int
+
+  Technician          user        @relation("completionLetterByTechnician", fields: [technician_id], references: [user_id])
+  
+  Request     MaintenanceRequest?    @relation("MaintenanceRequestConfirmation", fields: [request_id], references: [request_id])
 }
 
 // Extra table for mapping assignment and maintenance requests (join table)
@@ -123,6 +137,7 @@ enum Status {
   In_Progress
   Completed
   Rejected
+  Assigned
 }
 
 enum Priority {

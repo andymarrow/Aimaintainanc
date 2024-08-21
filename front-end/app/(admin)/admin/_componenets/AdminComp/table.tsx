@@ -20,7 +20,7 @@ const Table = ({ requests }) => {
   //modals
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [department, setDepartment] = useState(false);
-  const [departments, setDepartments] = useState([]);
+  const [departments, setDepartments] = useState<String[]>([]);
 
   const filteredData = requests.filter(
     (request) => request.status === "Activated"
@@ -158,10 +158,13 @@ const Table = ({ requests }) => {
         }
       );
       const data = await response.json();
-
-      if (data && data.departments) {
-        const { department_name } = data.departments;
-        // console.log(department_name);
+      console.log(data);
+      if (response.ok && Array.isArray(data)) {
+        // Map the data to extract only department_name
+        const departmentNames: String[] = data.map(
+          (department: any) => department.department_name
+        );
+        setDepartments(departmentNames);
       } else {
         console.error(`Fetching department error: ${response.statusText}`);
       }
@@ -240,14 +243,12 @@ const Table = ({ requests }) => {
                   name="department"
                   className="w-full p-2 border border-gray-300 rounded-lg"
                 >
-                  {departments.map((department) => (
-                    <option
-                      key={department.id}
-                      value={department.departmentName}
-                    >
-                      {department.departmentName}
-                    </option>
-                  ))}
+                  {departments?.length > 0 &&
+                    departments.map((department: any, index) => (
+                      <option key={index} value={department}>
+                        {department}
+                      </option>
+                    ))}
                   ;
                 </select>
               </div>

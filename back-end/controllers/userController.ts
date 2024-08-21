@@ -45,6 +45,7 @@ const newDepartment = async (req: Request, res: Response) => {
 const getDepartments = async (req: Request, res: Response) => {
   try {
     const departments = await prisma.department.findMany();
+    console.log(departments);
     res.json(departments);
   } catch (err) {
     console.error(err);
