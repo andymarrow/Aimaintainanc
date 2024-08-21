@@ -41,12 +41,13 @@ model MaintenanceRequest {
   request_id         Int       @id @default(autoincrement())
   requester_name     String
   email              String
-  request_type       String
+  request_type       Request_type
+  other_request_type String
   device_type        String
   model_no           String
   description        String
   phone_number       String
-  status             Status
+  status             Status    @default(Pending)
   priority           Priority
   created_at         DateTime  @default(now())
   updated_at         DateTime  @updatedAt
@@ -100,7 +101,13 @@ model AssignmentOnRequest {
 
   @@id([request_id, assignment_id])
 }
-
+model ProblemSearch {
+  solution_id         Int    @id @default(autoincrement())
+  title               String 
+  description         String
+  video_url           String
+  created_at          DateTime  @default(now())
+}
 enum Role {
   Admin
   Employee
@@ -121,4 +128,10 @@ enum Priority {
   Medium
   High
   Emergency
+}
+enum Request_type {
+  Hardware
+  Software
+  Network
+  Other
 }
