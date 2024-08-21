@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GetServerSideProps } from "next";
-import ChatBot from '../../../../components/ChatBot'
+import ChatBot from "../../../../components/ChatBot";
 function Login() {
   const [password, setPassword] = useState(" ");
   const [username, setUsername] = useState(" ");
@@ -63,7 +63,7 @@ function Login() {
   };
   return (
     <>
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center">
         <form
           className=" w-96 bg-white bg-opacity-10 backdrop-filter 
         backdrop-blur-lg  border border-opacity-30 border-white shadow-lg-white p-6 rounded-lg"
@@ -96,7 +96,7 @@ function Login() {
             <input
               className="w-full p-2 border border-gray-300 rounded-lg"
               type="password"
-               id="password"
+              id="password"
               placeholder="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -140,40 +140,56 @@ function Login() {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { req } = context;
-  const token = req.cookies['authToken'];
+  const token = req.cookies["authToken"];
 
   if (!token) {
-    return { redirect: { destination: '/login', permanent: false } };
+    return { redirect: { destination: "/login", permanent: false } };
   }
 
   try {
-    const response = await fetch('http://localhost:3002/api/auth/role', {
+    const response = await fetch("http://localhost:3002/api/auth/role", {
       headers: { Cookie: `authToken=${token}` },
     });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch role');
+      throw new Error("Failed to fetch role");
     }
 
     const data = await response.json();
     const { role } = data;
 
     switch (role) {
-      case 'admin':
-        return { redirect: { destination: '/admin/dashboard', permanent: false } };
-      case 'employee':
-        return { redirect: { destination: '/employee/emp_dashboard', permanent: false } };
-      case 'department':
-        return { redirect: { destination: '/department/allRequest', permanent: false } };
-      case 'maintenance':
-        return { redirect: { destination: '/dashboard/dashboardHome', permanent: false } };
-      case 'technician':
-        return { redirect: { destination: '/technician/allHistory', permanent: false } };
+      case "admin":
+        return {
+          redirect: { destination: "/admin/dashboard", permanent: false },
+        };
+      case "employee":
+        return {
+          redirect: {
+            destination: "/employee/emp_dashboard",
+            permanent: false,
+          },
+        };
+      case "department":
+        return {
+          redirect: { destination: "/department/allRequest", permanent: false },
+        };
+      case "maintenance":
+        return {
+          redirect: {
+            destination: "/dashboard/dashboardHome",
+            permanent: false,
+          },
+        };
+      case "technician":
+        return {
+          redirect: { destination: "/technician/allHistory", permanent: false },
+        };
       default:
-        return { redirect: { destination: '/', permanent: false } };
+        return { redirect: { destination: "/", permanent: false } };
     }
   } catch {
-    return { redirect: { destination: '/auth/Home', permanent: false } };
+    return { redirect: { destination: "/auth/Home", permanent: false } };
   }
 };
 

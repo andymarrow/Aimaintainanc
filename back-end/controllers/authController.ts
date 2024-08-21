@@ -8,20 +8,17 @@ const prisma = new PrismaClient();
 export const loginUser = async (req: Request, res: Response) => {
   const { username, password } = req.body;
   const trimmedUsername = username.trim();
-  console.log(req.body);
+  // console.log(req.body);
 
-  // const user1 =
-  //   // await prisma.$queryRaw`select * from user Where Username = 'amaya'`;
-  // console.log(user1);
   console.log(username);
   const user = await prisma.user.findUnique({
-    where: { Username: trimmedUsername },
+    where: { username: trimmedUsername },
   });
-  console.log(user);
+  // console.log(user);
 
   try {
     const user = await prisma.user.findUnique({
-      where: { Username: username },
+      where: { username: username },
     });
 
     if (!user) {
@@ -30,7 +27,7 @@ export const loginUser = async (req: Request, res: Response) => {
     }
 
     if (user) {
-      const isMatch = await bcrypt.compare(password, user.Password);
+      const isMatch = await bcrypt.compare(password, user.password);
       console.log("Password comparison:", isMatch);
 
       if (!isMatch) {
@@ -43,19 +40,21 @@ export const loginUser = async (req: Request, res: Response) => {
         throw new Error("No token key is specified in environment variable");
       }
       const token = jwt.sign(
-        { userId: user.User_id, role: user.Role },
+        { userId: user.user_id, role: user.role },
         secret,
         {
           expiresIn: "1h",
         }
       );
-      console.log("username:", user.Username, "role:", user.Role)
+      console.log("username:", user.username, "role:", user.role);
 
       // Set token in HTTP-only cookie
-      res.setHeader('Set-Cookie', `authToken=${token}; HttpOnly; Path=/; Max-Age=3600`);
+      res.setHeader(
+        "Set-Cookie",
+        `authToken=${token}; HttpOnly; Path=/; Max-Age=3600`
+      );
 
-
-      res.json({ user: { username: user.Username, role: user.Role }, token });
+      res.json({ user: { username: user.username, role: user.role }, token });
     }
   } catch (err) {
     console.error(err);

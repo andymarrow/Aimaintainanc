@@ -1,5 +1,5 @@
 "use Client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
@@ -10,11 +10,17 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { request } from "http";
+import { log } from "console";
 const Table = ({ requests }) => {
   //sorting
 
   const [sortedRequests, setSortedRequests] = useState(requests);
   const [isSortedAsc, setIsSortedAsc] = useState(true);
+
+  //modals
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [department, setDepartment] = useState(false);
+  const [departments, setDepartments] = useState([]);
 
   const filteredData = requests.filter(
     (request) => request.status === "Activated"
@@ -47,12 +53,13 @@ const Table = ({ requests }) => {
   const endIndex = startIndex + itemsPerPage;
   const requestToBeRendered = sortedRequests.slice(startIndex, endIndex);
 
+  useEffect(() => {
+    handleDepartmentList();
+  }, []);
+
   const handleButtonClick = (id: Number) => {
     router.push(`/admin/api/item/${id}`);
   };
-
-  // modal
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAddClick = () => {
     setIsModalOpen(true);
@@ -60,6 +67,43 @@ const Table = ({ requests }) => {
 
   const handleClose = () => {
     setIsModalOpen(false);
+    setDepartment(false);
+  };
+
+  const handleAddDepartment = () => {
+    setDepartment(true);
+  };
+  const handleDepartmentSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target as HTMLFormElement);
+    const data = {
+      departmentName: formData.get("departmentName") as string,
+    };
+    try {
+      console.log(data);
+      const response = await fetch(
+        "http://localhost:3002/api/registers/departments",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (response.ok) {
+        alert("Department added successfully");
+        setDepartment(false);
+      } else {
+        const errorMessage = await response.text();
+        alert("Department addition failed" + errorMessage);
+      }
+    } catch (e) {
+      console.error(`Server: ` + e);
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -78,14 +122,17 @@ const Table = ({ requests }) => {
 
     try {
       console.log(data);
-      const response = await fetch("http://localhost:3002/api/users/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const response = await fetch(
+        "http://localhost:3002/api/registers/users",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-        body: JSON.stringify(data),
-      });
+          body: JSON.stringify(data),
+        }
+      );
 
       if (response.ok) {
         alert("user registration successful");
@@ -96,6 +143,30 @@ const Table = ({ requests }) => {
       }
     } catch (err) {
       console.error(`Error: ` + err);
+    }
+  };
+
+  const handleDepartmentList = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3002/api/registers/getDepartments",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+
+      if (data && data.departments) {
+        const { department_name } = data.departments;
+        // console.log(department_name);
+      } else {
+        console.error(`Fetching department error: ${response.statusText}`);
+      }
+    } catch (err) {
+      console.error(`Fetching  error: ${err}`);
     }
   };
 
@@ -169,11 +240,15 @@ const Table = ({ requests }) => {
                   name="department"
                   className="w-full p-2 border border-gray-300 rounded-lg"
                 >
-                  <option value="software">Software Department</option>
-                  <option value="hr">HR Department</option>
-                  <option value="maintenance">Maintenance Department</option>
-                  <option value="sales">Sales Department</option>
-                  <option value="admin">Admin</option>
+                  {departments.map((department) => (
+                    <option
+                      key={department.id}
+                      value={department.departmentName}
+                    >
+                      {department.departmentName}
+                    </option>
+                  ))}
+                  ;
                 </select>
               </div>
 
@@ -212,6 +287,43 @@ const Table = ({ requests }) => {
           </div>
         </div>
       )}
+      {department && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-bold mb-4">Add Department</h2>
+
+            <form onSubmit={handleDepartmentSubmit}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Department Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Department Name"
+                  name="departmentName"
+                  className="w-full p-2 border border-gray-300 rounded-lg"
+                />
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="mr-4 px-4 py-2 bg-gray-500 text-white rounded-lg"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <div className="flex flex-row  justify-between">
         <div>
@@ -222,19 +334,36 @@ const Table = ({ requests }) => {
         {routeString === "Deactivated" ? (
           " "
         ) : (
-          <div
-            className=" flex flex-row right-0 bg-blue-950 rounded-lg w-fit  mb-8 p-2"
-            onClick={handleAddClick}
-          >
-            <div className="text-gray-200 text-center">
-              <Plus />
+          <div className="flex flex-row gap-5">
+            <div
+              className="flex flex-row right-0 bg-blue-950 rounded-lg w-fit  mb-8 p-2"
+              onClick={handleAddDepartment}
+            >
+              <div className="text-gray-200 text-center">
+                <Plus />
+              </div>
+              <div>
+                <Link href={""}>
+                  <button className=" text-gray-200 items-end flex-row ">
+                    ADD Department
+                  </button>
+                </Link>
+              </div>
             </div>
-            <div>
-              <Link href={""}>
-                <button className=" text-gray-200 items-end flex-row ">
-                  ADD
-                </button>
-              </Link>
+            <div
+              className=" flex flex-row right-0 bg-blue-950 rounded-lg w-fit  mb-8 p-2"
+              onClick={handleAddClick}
+            >
+              <div className="text-gray-200 text-center">
+                <Plus />
+              </div>
+              <div>
+                <Link href={""}>
+                  <button className=" text-gray-200 items-end flex-row ">
+                    ADD User
+                  </button>
+                </Link>
+              </div>
             </div>
           </div>
         )}

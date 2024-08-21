@@ -1,12 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { FiMessageCircle, FiSend, FiMic, FiMicOff, FiX, FiTrash2, FiVolumeX, FiVolume2 } from "react-icons/fi";
+import {
+  FiMessageCircle,
+  FiSend,
+  FiMic,
+  FiMicOff,
+  FiX,
+  FiTrash2,
+  FiVolumeX,
+  FiVolume2,
+} from "react-icons/fi";
 import { handleChatbotMessage } from "../../back-end/controllers/routingUtils"; // Adjust the import path as needed
-import { useRouter } from "next/navigation";
-
-
-
 
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,120 +21,55 @@ export default function ChatBot() {
   const [isMuted, setIsMuted] = useState(false); // New state for mute
   const language = "en-US";
 
-  let recognition = null;
-  let SpeechSynthesis = null;
-
-  // Add states for username and password
-const [username, setUsername] = useState("");
-const [password, setPassword] = useState("");
-const router = useRouter();
+  let recognition: SpeechRecognition | undefined;
+  let SpeechSynthesis: SpeechSynthesis | undefined;
 
   if (typeof window !== "undefined") {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition =
+      window.SpeechRecognition || (window as any).webkitSpeechRecognition;
     SpeechSynthesis = window.speechSynthesis;
 
-    recognition = new SpeechRecognition();
-    recognition.lang = language;
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.lang = language;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
 
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript;
-      setMessage(transcript);
-      setIsActive(false);
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setMessage(transcript);
+        setIsActive(false);
+      };
 
+      recognition.onspeechend = () => {
+        recognition?.stop();
+        setIsActive(false);
+      };
 
-  // handleVoiceCommand(transcript); // Handle the voice command for login
-    };
-
-    recognition.onspeechend = () => {
-      recognition.stop();
-      setIsActive(false);
-    };
-
-    recognition.onerror = (event) => {
-      console.error("Speech recognition error:", event.error);
-      setIsActive(false);
-    };
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        setIsActive(false);
+      };
+    } else {
+      console.error("SpeechRecognition API is not supported in this browser.");
+    }
   }
 
   // Function to speak the response using SpeechSynthesis
   const speak = (text: string) => {
-    if (typeof SpeechSynthesis !== 'undefined' && !isMuted) {
+    if (SpeechSynthesis && !isMuted) {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = language;
       SpeechSynthesis.speak(utterance);
     }
   };
 
-
-
-  // const handleVoiceCommand = (transcript) => {
-  //   const response = handleChatbotMessage(transcript);
-  
-  //   if (response.startsWith("Got it,")) {
-  //     const extractedUsername = transcript.toLowerCase().replace("my username is", "").trim();
-  //     setUsername(extractedUsername);
-  //   } else if (response.startsWith("Logging you in")) {
-  //     const extractedPassword = transcript.toLowerCase().replace("my password is", "").trim();
-  //     setPassword(extractedPassword);
-  //     handleSubmit(); // Trigger the login process after receiving the password
-  //   }
-  
-  //   // Speak the response
-  //   speak(response);
-  
-  //   // Add bot response to chat history
-  //   setChatHistory(prevChatHistory => [
-  //     ...prevChatHistory,
-  //     { sender: "bot", text: response }
-  //   ]);
-  // };
-
-
-//   const handleSubmit = async () => {
-//   try {
-//     const response = await fetch("http://localhost:3002/api/auth/login", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({ username, password }),
-//     });
-//     const data = await response.json();
-
-//     if (data && data.user) {
-//       document.cookie = `authToken=${data.token}; path=/;`;
-//       const { role } = data.user;
-
-//       switch (role) {
-//         case "admin":
-//           router.push("/admin/dashboard");
-//           break;
-//         case "employee":
-//           router.push("/employee/emp_dashboard");
-//           break;
-//         // Add cases for other roles...
-//         default:
-//           router.push("/");
-//       }
-//     } else {
-//       speak("Credentials are wrong. Please try again.");
-//     }
-//   } catch (error) {
-//     console.error("Login error:", error);
-//     speak("An error occurred while trying to log you in.");
-//   }
-// };
-
-
-
   const handleOnRecord = () => {
     if (isActive) {
-      recognition.stop();
+      recognition?.stop();
       closeSynthesis();
     } else {
-      recognition.start();
+      recognition?.start();
     }
     setIsActive(!isActive);
   };
@@ -139,7 +79,7 @@ const router = useRouter();
     closeSynthesis();
   };
 
-  const handleMessageChange = (e) => {
+  const handleMessageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMessage(e.target.value);
   };
 
@@ -169,7 +109,6 @@ const router = useRouter();
           { sender: "bot", text: data.response },
         ]);
 
-
         // Speak the response if not muted
         speak(data.response);
       } catch (error) {
@@ -191,7 +130,7 @@ const router = useRouter();
     if (SpeechSynthesis) {
       SpeechSynthesis.cancel();
     }
-  }
+  };
 
   const clearChatHistory = () => {
     setChatHistory([]);
@@ -222,14 +161,14 @@ const router = useRouter();
               chatHistory.map((chat, index) => (
                 <div
                   key={index}
-                  className={`flex ${chat.sender === "user" ? "justify-end" : "justify-start"
-                    }`}
+                  className={`flex ${
+                    chat.sender === "user" ? "justify-end" : "justify-start"
+                  }`}
                 >
                   <div
-                    className={`${chat.sender === "user"
-                      ? "bg-blue-500"
-                      : "bg-gray-500"
-                      } text-white p-2 rounded-lg max-w-xs mt-2`}
+                    className={`${
+                      chat.sender === "user" ? "bg-blue-500" : "bg-gray-500"
+                    } text-white p-2 rounded-lg max-w-xs mt-2`}
                   >
                     <p>{chat.text}</p>
                   </div>
@@ -267,8 +206,11 @@ const router = useRouter();
             </button>
             <button
               onClick={toggleMute}
-              className={`m-2 p-2 text-white text-center items-center rounded-lg ${isMuted ? "bg-gray-600 hover:bg-gray-700" : "bg-blue-600 hover:bg-blue-700"
-                } transition-all transform hover:scale-105 focus:outline-none`}
+              className={`m-2 p-2 text-white text-center items-center rounded-lg ${
+                isMuted
+                  ? "bg-gray-600 hover:bg-gray-700"
+                  : "bg-blue-600 hover:bg-blue-700"
+              } transition-all transform hover:scale-105 focus:outline-none`}
             >
               {isMuted ? <FiVolumeX size={20} /> : <FiVolume2 size={20} />}
             </button>
