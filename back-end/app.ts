@@ -14,7 +14,14 @@ const app = express();
 app.use(cookieParser()); // To parse cookies in request
 app.use(express.json()); // To parse JSON bodies
 
-app.use(cors());
+
+const corsOptions = {
+  origin: "http://localhost:3000", // Adjust according to your front-end
+  credentials: true, // Allow cookies to be sent with requests
+};
+app.use((cors(corsOptions)));
+
+
 app.use(bodyParser.json());
 dotenv.config();
 
