@@ -96,12 +96,12 @@ model completionConfirmation {
   confirmation_id     Int        @id @default(autoincrement())
   finished_at         DateTime   @default(now())
   given_at            DateTime   @default(now())
-  request_id          Int
+  request_id          Int        @unique
   technician_id       Int
 
   Technician          user        @relation("completionLetterByTechnician", fields: [technician_id], references: [user_id])
   
-  Request     MaintenanceRequest?    @relation("MaintenanceRequestConfirmation", fields: [request_id], references: [request_id])
+  Request     MaintenanceRequest    @relation("MaintenanceRequestConfirmation", fields: [request_id], references: [request_id])
 }
 
 // Extra table for mapping assignment and maintenance requests (join table)
