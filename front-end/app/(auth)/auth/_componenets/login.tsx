@@ -35,19 +35,19 @@ function Login() {
         document.cookie = `authToken=${data.token}; path=/;`;
         const { role } = data.user;
         switch (role) {
-          case "admin":
+          case "Admin":
             router.push("/admin/dashboard");
             break;
-          case "employee":
+          case "Employee":
             router.push("/employee/emp_dashboard");
             break;
-          case "deparment_head":
+          case "Deparment_Head":
             router.push("/department/allRequest");
             break;
-          case "maintenance_head":
+          case "Maintenance_Head":
             router.push("/dashboard/dashboardHome");
             break;
-          case "technician":
+          case "Technician":
             router.push("/technician/allHistory");
             break;
           default:

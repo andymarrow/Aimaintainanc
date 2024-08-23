@@ -100,7 +100,7 @@
 //   technician_id       Int
 
 //   Technician          user        @relation("completionLetterByTechnician", fields: [technician_id], references: [user_id])
-  
+
 //   Request             MaintenanceRequest  @relation("MaintenanceRequestConfirmation", fields: [request_id], references: [request_id])
 // }
 
@@ -109,7 +109,7 @@
 //   request_id          Int 
 //   assignment_id       Int
 //   assigned_at         DateTime    @default(now())
-  
+
 //   MaintenanceRequest  MaintenanceRequest @relation("MaintenanceRequestAssignments",fields: [request_id], references: [request_id], map: "MaintenanceRequestAssignments_fkey")
 //   Assignment          Assignment          @relation("AssignmentOnRequest",fields: [assignment_id], references: [assignment_id], map: "AssignmentOnRequest_fkey")
 
@@ -163,19 +163,19 @@ datasource db {
 }
 
 model user {
-  user_id       Int         @id @default(autoincrement())
-  username      String      @unique
-  email         String      @unique
-  password      String
-  role          Role
-  phone_number  String      @unique
-  created_at    DateTime    @default(now())
-  activated     Boolean     @default(true)
-  deactivated   Boolean     @default(false) // later it will be removed -- my bad
-  department_id Int?
-  Department    department? @relation("UsersDepartment", fields: [department_id], references: [department_id])
-
-  MaintenanceRequests            MaintenanceRequest?     @relation("EmployeeMaintenanceRequests")
+  user_id                Int                      @id @default(autoincrement())
+  username               String                   @unique
+  email                  String                   @unique
+  password               String
+  role                   Role
+  phone_number           String                   @unique
+  created_at             DateTime                 @default(now())
+  activated              Boolean                  @default(true)
+  deactivated            Boolean                  @default(false) // later it will be removed -- my bad
+  department_id          Int?
+  Department             department?              @relation("UsersDepartment", fields: [department_id], references: [department_id])
+  request_id             Int
+  MaintenanceRequests    MaintenanceRequest?      @relation("EmployeeMaintenanceRequests", fields: [request_id], references: [request_id])
   MaintenanceAssignments Assignment[]             @relation("TechnicianAssignments")
   FeedbackGiven          Feedback[]               @relation("EmployeeFeedbacks")
   completionConfirmation completionConfirmation[] @relation("completionLetterByTechnician")
@@ -196,7 +196,7 @@ model department {
 }
 
 model MaintenanceRequest {
-  request_id         Int              @id @default(autoincrement())
+  request_id         Int           @id @default(autoincrement())
   requester_name     String
   email              String
   request_type       Request_type?
@@ -205,16 +205,16 @@ model MaintenanceRequest {
   model_no           String
   description        String
   phone_number       String
-  status             Status           @default(In_Progress)
+  status             Status        @default(In_Progress)
   priority           Priority
-  created_at         DateTime         @default(now())
-  updated_at         DateTime         @default(now()) @updatedAt
-  employee_id         Int             @unique
+  created_at         DateTime      @default(now())
+  updated_at         DateTime      @default(now()) @updatedAt
+  employee_id        Int
 
-  user                   user @relation("EmployeeMaintenanceRequests", fields: [employee_id], references: [user_id])
-  department_id      Int? //we are assisning this id inorder to get the name from the user and get this id from that
-  
-  department         department?      @relation("DepartmentMaintenanceRequests", fields: [department_id], references: [department_id], map: "DepartmentMaintenanceRequests_fkey")
+  user          user[] @relation("EmployeeMaintenanceRequests")
+  department_id Int? //we are assisning this id inorder to get the name from the user and get this id from that
+
+  department department? @relation("DepartmentMaintenanceRequests", fields: [department_id], references: [department_id], map: "DepartmentMaintenanceRequests_fkey")
 
   // Relations
   Feedbacks               Feedback[]              @relation("MaintenanceRequestFeedbacks")
@@ -224,7 +224,7 @@ model MaintenanceRequest {
   // maintenance_head    user?         @relation("MaintenanceHeadRequests", fields: [maintenance_head_id], references: [user_id], map: "MaintenanceHeadRequests_fkey")
   // technician          user?         @relation("TechnicianMaintenanceRequests", fields: [technician_id], references: [user_id], map: "TechnicianMaintenanceRequests_fkey")
   // usersOnRequest     usersOnRequest[] @relation("maintenanaceRequestOnUser") //the first user one to be put in this array is the user making the request which the id we coulf get from jwt  
-    // department_head_id  Int?
+  // department_head_id  Int?
   // maintenance_head_id Int?
   // technician_id       Int?
 }

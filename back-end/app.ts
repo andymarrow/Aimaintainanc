@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
+import requestRoutes from "./routes/requestRoutes";
 import cookieParser from "cookie-parser";
 import { handleChatbotMessage } from "./controllers/chatbotIntents";
 import * as dotenv from "dotenv";
@@ -16,7 +17,9 @@ app.use(express.json()); // To parse JSON bodies
 
 app.use(cors());
 app.use(bodyParser.json());
+dotenv.config();
 
+app.use("/api/requests/", requestRoutes);
 app.use("/api/auth/", authRoutes);
 app.use("/api/registers/", userRoutes);
 

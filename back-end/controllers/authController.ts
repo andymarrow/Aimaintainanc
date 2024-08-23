@@ -40,7 +40,7 @@ export const loginUser = async (req: Request, res: Response) => {
         throw new Error("No token key is specified in environment variable");
       }
       const token = jwt.sign(
-        { userId: user.user_id, role: user.role },
+        { userId: user.user_id,  username: user.username, role: user.role },
         secret,
         {
           expiresIn: "1h",

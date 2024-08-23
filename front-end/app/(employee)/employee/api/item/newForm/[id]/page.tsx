@@ -1,19 +1,140 @@
 "use client";
 import { Navbar } from "@/app/(employee)/employee/_componenets/EmpComp/navbar";
 import { Sidebar } from "@/app/(employee)/employee/_componenets/EmpComp/sidebar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { requests } from "../../../../empData";
 import { usePathname } from "next/navigation";
+import jwtDecode from "jwt-decode"; // Correct import
+
+// Define the interface for the JWT payload
+interface DecodedToken {
+  userId: string;
+  username: string;
+  role: string;
+}
+
 
 export default function AssignedCompleted() {
-  const [isTechnicianView, setIsTechnicianView] = useState(false);
+  const [departments, setDepartments] = useState<String[]>([]);
+  const [requestType, setRequestType] = useState("");
+  const [Other, setOther] = useState(false);
+  const [urgency, setUrgency] = useState(" ");
+  const [popupMessage, setPopupMessage] = useState("");
+  const [popupVisible, setPopupVisible] = useState(false);
 
-  const showTechnicianView = () => {
-    setIsTechnicianView(true);
+
+
+  // Utility function to get the user ID from the JWT token
+  const getUserIdFromToken = (): string | null => {
+    const token = document.cookie.split('; ').find(row => row.startsWith('authToken='))?.split('=')[1];
+    if (!token) return null;
+
+    try {
+      const decoded: any = jwtDecode(token);
+      return decoded.userId || null;
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return null;
+    }
   };
 
-  const showRequestorView = () => {
-    setIsTechnicianView(false);
+
+  useEffect(() => {
+    handleDepartmentList();
+  }, []);
+
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target as HTMLFormElement); // object 
+
+    const employeeId = getUserIdFromToken();
+
+    if (!employeeId) {
+      alert('User is not authenticated');
+      return;
+    }
+
+    const data: any = {
+      requester_name: formData.get("requester_name") as string,
+      email: formData.get("email") as string,
+      device_type: formData.get("device_type") as string,
+      description: formData.get("description") as string,
+      priority: formData.get("priority") as string,
+      phone_number: formData.get("phone_number") as string,
+      request_type: formData.get("request_type") as string,
+      other_request_type: formData.get("other_request_type") as string,
+      model_no: formData.get("model_no") as string,
+      employee_id: employeeId ? parseInt(employeeId) : null,
+      department_name: formData.get("department_name") as string, // Include department_name instead of department_id
+  
+    };
+
+    try {
+      console.log(data);
+      const response = await fetch("http://localhost:3002/api/requests/newForm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify(data),
+      });
+      if (response.ok) {
+        setPopupMessage("Request sent succesfully");
+        setPopupVisible(true);
+      } else {
+        const errorMessage = await response.text();
+        setPopupMessage("Request not sent : " + errorMessage);
+        setPopupVisible(true);
+      }
+    } catch (err) {
+      setPopupMessage("Server error: " + (err as Error).message);
+      setPopupVisible(true);
+    }
+  };
+
+  const closePopup = () => {
+    setPopupVisible(false);
+  };
+
+
+
+  const handleOtherClick = (e) => {
+    setRequestType(e.target.value);
+    setOther(e.target.value === "Other");
+  };
+
+  const handleUrgency = (e) => {
+    setUrgency(e.target.value)
+  }
+
+  const handleDepartmentList = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:3002/api/registers/getDepartments",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      if (response.ok && Array.isArray(data)) {
+        // Map the data to extract only department_name
+        const departmentNames: String[] = data.map(
+          (department: any) => department.department_name
+        );
+        setDepartments(departmentNames);
+      } else {
+        console.error(`Fetching department error: ${response.statusText}`);
+      }
+    } catch (err) {
+      console.error(`Fetching  error: ${err}`);
+    }
   };
   return (
     <div className="">
@@ -29,12 +150,7 @@ export default function AssignedCompleted() {
         <div className="bg-slate-400  rounded-lg shadow-lg p-4 sm:p-6 lg:p-8  w-full ">
           <h2 className="text-3xl font-bold mb-4 text-center">Request Form</h2>
           <p className="mb-4">
-            This form is for for giving feedback to the technician on the
-            maintenance job.
-          </p>
-          <p className="mb-4">
-            You are assigning a technician for{" "}
-            <span className="font-bold">John doe</span>'s request?
+            Making a new request form
           </p>
 
           <div className="bg-slate-300 rounded-lg p-4">
@@ -47,11 +163,12 @@ export default function AssignedCompleted() {
                   </h3>
                 </div>
 
-                <form className="mt-4">
+                <form className="mt-4" onSubmit={handleSubmit}>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label
                         htmlFor="RequesterName"
+
                         className="block mb-1 font-medium"
                       >
                         Requester Name
@@ -60,6 +177,7 @@ export default function AssignedCompleted() {
                         type="text"
                         className="border rounded-md px-3 py-2 w-full"
                         id="RequesterName"
+                        name="requester_name"
                         placeholder="enter your name"
                         required
                       />
@@ -72,6 +190,7 @@ export default function AssignedCompleted() {
                         type="email"
                         className="border rounded-md px-3 py-2 w-full"
                         id="Email"
+                        name="email"
                         placeholder="enter your email"
                         required
                       />
@@ -88,6 +207,7 @@ export default function AssignedCompleted() {
                       <input
                         type="text"
                         className="border rounded-md px-3 py-2 w-full"
+                        name="phone_number"
                         placeholder="enter your phone number"
                         required
                       />
@@ -103,6 +223,7 @@ export default function AssignedCompleted() {
                         type="text"
                         className="border rounded-md px-3 py-2 w-full"
                         id="DeviceType"
+                        name="device_type"
                         placeholder="enter your Device Type"
                         required
                       />
@@ -118,33 +239,50 @@ export default function AssignedCompleted() {
                       </label>
                       <select
                         id="RequestType"
+                        name="request_type"
                         className="border rounded-md px-3 py-2 w-full"
+                        value={requestType}
+                        onChange={handleOtherClick}
                         required
                       >
-                        <option value="" disabled selected>
+                        <option disabled selected>
                           Select Request Type
                         </option>
-                        <option value="network">Network</option>
-                        <option value="software">Software</option>
-                        <option value="hardware">Hardware</option>
-                        <option value="other">Other</option>
+                        <option value="Network">Network</option>
+                        <option value="Software">Software</option>
+                        <option value="Hardware">Hardware</option>
+                        <option value="Other">Other</option>
                       </select>
                     </div>
+                    {Other && (
+                      <div>
+                        <label>
+                          Other Request Type
+                        </label>
+                        <textarea
+                          className="border rounded-md px-3 py-2 w-full"
+                          name="other_request_type "
+                          placeholder="Please describe your request type"
 
+                        ></textarea>
+                      </div>
+                    )}
                     <div>
-                      <label
-                        htmlFor="Department"
-                        className="block mb-1 font-medium"
-                      >
+                      <label className="block text-sm font-medium text-gray-700">
                         Department
                       </label>
-                      <input
-                        type="text"
-                        className="border rounded-md px-3 py-2 w-full"
-                        id="Department"
-                        placeholder="enter your Department"
-                        required
-                      />
+                      <select
+                        name="department_name"
+                        className="w-full p-2 border border-gray-300 rounded-lg"
+                      >
+                        {departments?.length > 0 &&
+                          departments.map((department: any, index) => (
+                            <option key={index} value={department}>
+                              {department}
+                            </option>
+                          ))}
+                        ;
+                      </select>
                     </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
@@ -158,6 +296,7 @@ export default function AssignedCompleted() {
                       <textarea
                         className="border rounded-md px-3 py-2 w-full"
                         id="Description"
+                        name="description"
                         placeholder="enter your Description"
                         required
                       ></textarea>
@@ -173,6 +312,7 @@ export default function AssignedCompleted() {
                         type="text"
                         className="border rounded-md px-3 py-2 w-full"
                         id="ModelNo"
+                        name="model_no"
                         placeholder="enter your Model No"
                         required
                       />
@@ -188,15 +328,17 @@ export default function AssignedCompleted() {
                       </label>
                       <select
                         id="Urgency"
+                        name="priority"
                         className="border rounded-md px-3 py-2 w-full"
                         required
                       >
                         <option value="" disabled selected>
                           Select Urgency
                         </option>
-                        <option value="high">High</option>
-                        <option value="medium">Medium</option>
-                        <option value="low">Low</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                        <option value="Emergency">Emergency</option>
                       </select>
                     </div>
                   </div>
@@ -204,7 +346,7 @@ export default function AssignedCompleted() {
                   <div className="flex justify-center mt-4">
                     <button
                       className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-xl mr-2"
-                      onClick={showTechnicianView}
+                      type="submit"
                     >
                       submit
                     </button>
@@ -215,6 +357,20 @@ export default function AssignedCompleted() {
           </div>
         </div>
       </main>
+
+      {/* Popup */}
+      {popupVisible && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 md:pl-60 ">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <div className="text-lg">{popupMessage}</div>
+            <button
+              onClick={closePopup}
+              className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded  flex justify-center "
+            >
+              Close </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
