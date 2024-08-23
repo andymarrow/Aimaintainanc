@@ -4,6 +4,6 @@ import { getMaintenanceRequests } from "../controllers/requestController";
 const router = express.Router();
 
 router.post("/newForm", newUser);
-router.get("/maintenancerequests", getMaintenanceRequests);
+router.post("/maintenancerequests", getMaintenanceRequests);
 
 export default router;

@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { PrismaClient } from "@prisma/client";
-
+import jwt from 'jsonwebtoken';
 const prisma = new PrismaClient();
 
 export const newUser = async (req: Request, res: Response) => {
@@ -68,21 +68,31 @@ export const newUser = async (req: Request, res: Response) => {
 
 // Controller function to get maintenance requests by employee name
 export const getMaintenanceRequests = async (req: Request, res: Response) => {
-  const employeeName = req.headers['x-employee-name'] as string;
-
-  console.log(employeeName)
   try {
-    if (!employeeName) {
-      return res.status(400).json({ error: 'Employee name is required' });
+    // Extract the token from the authorization header
+    const authHeader = req.headers['authorization'];
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Authorization token missing or invalid' });
+    }
+    
+    const token = authHeader.split(' ')[1];
+    const secret = process.env.JWT_KEY as string;
+
+    if (!secret) {
+      throw new Error("No token key is specified in environment variable");
     }
 
-    // Query the database for maintenance requests with the provided employee name
+    // Decode the JWT token
+    const decodedToken = jwt.verify(token, secret) as { userId: string };
+    const { userId } = decodedToken;
+    console.log("User ID from Token:", userId);
+
+    // Fetch the maintenance requests for the user
     const requests = await prisma.maintenanceRequest.findMany({
       where: {
-        requester_name: employeeName,
-      },
+        employee_id: parseInt(userId) // Ensure userId is a number
+      }
     });
-    console.log(requests)
 
     res.status(200).json(requests);
   } catch (error) {

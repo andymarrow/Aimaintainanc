@@ -1,24 +1,92 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState }  from "react";
 import { Navbar } from "../../_componenets/EmpComp/navbar";
 import { Sidebar } from "../../_componenets/EmpComp/sidebar";
 import { requests } from "../../empData";
 import TabTable from "../../_componenets/EmpComp/TabTable";
 
+import jwtDecode from "jwt-decode"; // Correct import
+
+// Define the interface for the JWT payload
+interface DecodedToken {
+  userId: string;
+  username: string;
+  role: string;
+}
+
+
 const SettingsPage = () => {
-  const employeeName = "Miki Alemu";
 
-  // Find the employee's info
-  const employee = requests.find((emp) => emp.requesterName === employeeName);
+const [employeeName, setEmployeeName] = useState<string>("");
+  const [requests, setRequests] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  if (!employee) {
-    return <div>Employee not found</div>;
+  useEffect(() => {
+    const getTokenFromCookies = () => {
+      const cookieString = document.cookie;
+      const cookies = cookieString.split("; ");
+      const authTokenCookie = cookies.find((cookie) =>
+        cookie.startsWith("authToken=")
+      );
+      return authTokenCookie ? authTokenCookie.split("=")[1] : null;
+    };
+
+    const token = getTokenFromCookies();
+
+    if (token) {
+      const decodedToken = jwtDecode<DecodedToken>(token);
+      console.log(decodedToken.username)
+      setEmployeeName(decodedToken.username);
+      
+
+       // Fetch requests from the API
+       fetch('/api/requests/maintenancerequests', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Authorization header
+        },
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        setRequests(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching requests:', error);
+        setLoading(false);
+      });
+
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+
+
+
+  // const employeeName = "Miki Alemu";
+
+  // // Find the employee's info
+  // const employee = requests.find((emp) => emp.requesterName === employeeName);
+
+  // if (!employee) {
+  //   return <div>Employee not found</div>;
+  // }
+
+  // // Filter requests to include only those belonging to the specific employee
+  // const filteredRequests = requests.filter(
+  //   (req) => req.requesterName === employeeName
+  // );
+
+if (loading) {
+    return <div>Loading...</div>;
   }
 
-  // Filter requests to include only those belonging to the specific employee
-  const filteredRequests = requests.filter(
-    (req) => req.requesterName === employeeName
-  );
+  if (!requests || requests.length === 0) {
+    return <div>No requests found for the employee.</div>;
+  }
+
 
   return (
     <div className="h-full">
@@ -31,7 +99,7 @@ const SettingsPage = () => {
       </div>
 
       <div className="pt-[80px] md:pl-60">
-        <TabTable requests={filteredRequests} />
+        <TabTable requests={requests} />
       </div>
     </div>
   );
