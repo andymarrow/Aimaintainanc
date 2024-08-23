@@ -8,8 +8,8 @@ CREATE TABLE `user` (
     `phone_number` VARCHAR(191) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `activated` BOOLEAN NOT NULL DEFAULT true,
-    `deactivated` BOOLEAN NOT NULL DEFAULT false,
     `department_id` INTEGER NULL,
+    `request_id` INTEGER NULL,
 
     UNIQUE INDEX `user_username_key`(`username`),
     UNIQUE INDEX `user_email_key`(`email`),
@@ -45,7 +45,6 @@ CREATE TABLE `MaintenanceRequest` (
     `employee_id` INTEGER NOT NULL,
     `department_id` INTEGER NULL,
 
-    UNIQUE INDEX `MaintenanceRequest_employee_id_key`(`employee_id`),
     PRIMARY KEY (`request_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -109,7 +108,7 @@ CREATE TABLE `ProblemSearch` (
 ALTER TABLE `user` ADD CONSTRAINT `user_department_id_fkey` FOREIGN KEY (`department_id`) REFERENCES `department`(`department_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `MaintenanceRequest` ADD CONSTRAINT `MaintenanceRequest_employee_id_fkey` FOREIGN KEY (`employee_id`) REFERENCES `user`(`user_id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `user` ADD CONSTRAINT `user_request_id_fkey` FOREIGN KEY (`request_id`) REFERENCES `MaintenanceRequest`(`request_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `MaintenanceRequest` ADD CONSTRAINT `DepartmentMaintenanceRequests_fkey` FOREIGN KEY (`department_id`) REFERENCES `department`(`department_id`) ON DELETE SET NULL ON UPDATE CASCADE;

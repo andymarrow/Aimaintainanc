@@ -68,7 +68,7 @@ export default function AssignedCompleted() {
       model_no: formData.get("model_no") as string,
       employee_id: employeeId ? parseInt(employeeId) : null,
       department_name: formData.get("department_name") as string, // Include department_name instead of department_id
-  
+
     };
 
     try {

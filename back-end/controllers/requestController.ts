@@ -19,44 +19,41 @@ export const newUser = async (req: Request, res: Response) => {
   } = req.body;
 
   try {
+    // Fetch the department_id based on the department_name
+    let department_id = null;
 
-     // Step 1: Fetch the department_id based on the department_name
-     let department_id = null;
+    if (department_name) {
+      const department = await prisma.department.findUnique({
+        where: { department_name },
+        select: { department_id: true },
+      });
 
-     if (department_name) {
-       const department = await prisma.department.findUnique({
-         where: { department_name },
-         select: { department_id: true },
-       });
- 
-       if (department) {
-         department_id = department.department_id;
-       } else {
-         return res.status(400).json({ message: "Invalid department name" });
-       }
-     }
-
-     
-    const data: any = {
-      requester_name,
-      email,
-      phone_number,
-      description: description || "",
-      priority,
-      request_type,
-      other_request_type: other_request_type || "",
-      model_no: model_no || "",
-      device_type,
-      employee_id,        // Directly setting the employee_id field
-      department_id,      // Include the retrieved department_id
-       };
-
-    // if (department_id) {
-    //   data.department_id = department_id;  // Directly setting the department_id field
-    // }
+      if (department) {
+        department_id = department.department_id;
+      } else {
+        return res.status(400).json({ message: "Invalid department name" });
+      }
+    }
 
     const maintenanceRequest = await prisma.maintenanceRequest.create({
-      data,
+      data: {
+        requester_name,
+        email,
+        phone_number,
+        description: description || "",
+        priority,
+        request_type,
+        other_request_type: other_request_type || "",
+        model_no: model_no || "",
+        device_type,
+        employee_id,
+        department: department_id ? {
+          connect: { department_id }
+        } : undefined,
+        user: {
+          connect: { user_id: employee_id } // Connect the initial user
+        }
+      }
     });
 
     res.status(201).json({ message: "Maintenance request created successfully", maintenanceRequest });
@@ -68,6 +65,7 @@ export const newUser = async (req: Request, res: Response) => {
     }
   }
 };
+
 // Controller function to get maintenance requests by employee name
 export const getMaintenanceRequests = async (req: Request, res: Response) => {
   const employeeName = req.headers['x-employee-name'] as string;

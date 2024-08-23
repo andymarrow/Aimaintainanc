@@ -171,10 +171,9 @@ model user {
   phone_number           String                   @unique
   created_at             DateTime                 @default(now())
   activated              Boolean                  @default(true)
-  deactivated            Boolean                  @default(false) // later it will be removed -- my bad
   department_id          Int?
   Department             department?              @relation("UsersDepartment", fields: [department_id], references: [department_id])
-  request_id             Int
+  request_id             Int?
   MaintenanceRequests    MaintenanceRequest?      @relation("EmployeeMaintenanceRequests", fields: [request_id], references: [request_id])
   MaintenanceAssignments Assignment[]             @relation("TechnicianAssignments")
   FeedbackGiven          Feedback[]               @relation("EmployeeFeedbacks")
