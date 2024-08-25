@@ -40,14 +40,18 @@ const [employeeName, setEmployeeName] = useState<string>("");
       
 
        // Fetch requests from the API
-       fetch('/api/requests/maintenancerequests', {
+       fetch('http://localhost:3002/api/requests/maintenancerequests', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`, // Authorization header
         },
+        body: JSON.stringify({ employeeName: decodedToken.username }), // Pass employeeName here
+      
       })
-      .then((response) => response.json())
+      .then((response) => response.json() 
+    
+    )
       .then((data) => {
         setRequests(data);
         setLoading(false);
@@ -56,6 +60,7 @@ const [employeeName, setEmployeeName] = useState<string>("");
         console.error('Error fetching requests:', error);
         setLoading(false);
       });
+     
 
     } else {
       setLoading(false);
@@ -83,9 +88,9 @@ if (loading) {
     return <div>Loading...</div>;
   }
 
-  if (!requests || requests.length === 0) {
-    return <div>No requests found for the employee.</div>;
-  }
+  // if (!requests || requests.length === 0) {
+  //   return <div>No requests found for the employee.</div>;
+  // }
 
 
   return (

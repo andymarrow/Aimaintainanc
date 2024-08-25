@@ -8,10 +8,10 @@ import { Plus } from "lucide-react"
 const TabTable = ({ requests }) => {
   // Categorize requests based on their status
   const categorizedRequests = {
-    accepted: requests.filter((req) => req.status === "Accepted"),
+    accepted: requests.filter((req) => req.status === "Pending"),
     rejected: requests.filter((req) => req.status === "Rejected"),
     completed: requests.filter((req) => req.status === "Completed"),
-    inProgress: requests.filter((req) => req.status === "In Progress"),
+    inProgress: requests.filter((req) => req.status === "In_Progress"),
     TechnicianAssigned: requests.filter((req) => req.status === "Assigned"),
   };
 
