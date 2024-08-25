@@ -26,7 +26,7 @@ const SearchProblem = () => {
       <div className="hidden md:flex h-full w-56 flex-col fixed top-0 inset-y-0 z-40 ml-4">
         <Sidebar />
       </div>
-      <div className="min-h-screen bg-gray-100 p-6 pt-[150px]">
+      <div className="min-h-screen bg-gray-100 p-6 pt-[150px] md:ml-56">
         <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
           <h1 className="text-3xl font-bold mb-6">Search for Help Desks</h1>
           <div className="flex items-center mb-6">

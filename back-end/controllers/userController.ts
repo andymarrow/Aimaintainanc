@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import bcrypt from "bcryptjs";
+import jwt from 'jsonwebtoken';
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -90,10 +91,56 @@ const getUsersList = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// Use the secret from environment variables
+const secret = process.env.JWT_KEY || 'default_secret'; // Fallback to a default secret if env variable is not set
+
+
+const updateUserPassword = async (req: Request, res: Response) => {
+  const { username, currentPassword, newPassword } = req.body;
+  console.log(`${username},${currentPassword},${newPassword}`)
+  try {
+    // Find the user by username
+    const user = await prisma.user.findUnique({
+      where: {
+        username: username,
+      },
+    });
+
+    // If user does not exist, return an error
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the current password matches
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Incorrect password" });
+    }
+
+    // Hash the new password
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the user's password in the database
+    await prisma.user.update({
+      where: {
+        username: username,
+      },
+      data: {
+        password: hashedNewPassword,
+      },
+    });
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 export {
   newUser,
   newDepartment,
   getDepartments,
   removeDepartment,
   getUsersList,
+  updateUserPassword,
 };

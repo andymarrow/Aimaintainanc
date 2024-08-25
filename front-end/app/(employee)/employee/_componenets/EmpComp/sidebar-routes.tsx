@@ -1,19 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import jwtDecode from "jwt-decode";
 import {
-  BarChart,
-  CheckSquare,
-  CheckSquare2,
-  Compass,
-  ShieldMinus,
   ShieldCheck,
-  FileText,
-  Layout,
-  LogOut,
   Search,
-  MessageCircle,
   Settings,
-  Users,
+  LogOut,
 } from "lucide-react";
 import { SidebarItem } from "./sidebar-item";
 import Image from "next/image";
@@ -44,10 +37,29 @@ const guestRoutes = [
 ];
 
 export const SidebarRoutes = () => {
-  const routes = guestRoutes;
+  const [employeeName, setEmployeeName] = useState("");
+
+  useEffect(() => {
+    const getTokenFromCookies = () => {
+      const cookieString = document.cookie;
+      const cookies = cookieString.split("; ");
+      const authTokenCookie = cookies.find((cookie) =>
+        cookie.startsWith("authToken=")
+      );
+      return authTokenCookie ? authTokenCookie.split("=")[1] : null;
+    };
+
+    const token = getTokenFromCookies();
+
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      setEmployeeName(decodedToken.username);
+    }
+  }, []);
+
   return (
     <div className="flex flex-col w-full">
-      {routes.map((route) => (
+      {guestRoutes.map((route) => (
         <SidebarItem
           key={route.href}
           icon={route.icon}
@@ -59,7 +71,7 @@ export const SidebarRoutes = () => {
       <div className="mt-5 flex items-center gap-x-2 text-black font-[500] text-sm pl-6 transition-all hover:text-sky-700 hover:bg-slate-300/20">
         <Image height={40} width={40} alt="logo" src="/avatar.png" />
         <div className="flex justify-center items-center">
-          <h5> Hey , Abebe </h5>
+          <h5>Hey, {employeeName || "Guest"}</h5>
         </div>
       </div>
     </div>
