@@ -102,3 +102,47 @@ export const getMaintenanceRequests = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'An error occurred while fetching maintenance requests' });
   }
 };
+
+export const getUserInfo = async (req: Request, res: Response) => {
+  const userId = parseInt(req.params.userId, 10);
+
+  try {
+    // Fetch user information
+    const user = await prisma.user.findUnique({
+      where: { user_id: userId },
+      select: { // Only select fields needed
+        username: true,
+        email: true,
+        department_id: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Fetch department name if department_id exists
+    let departmentName = '';
+    console.log(user.department_id)
+    if (user.department_id) {
+      const department = await prisma.department.findUnique({
+        where: { department_id: user.department_id },
+        select: { department_name: true },
+      });
+
+      if (department) {
+        departmentName = department.department_name;
+      }
+    }
+
+    // Respond with user information and department name
+    res.json({
+      username: user.username,
+      email: user.email,
+      department_name: departmentName,
+    });
+  } catch (err) {
+    console.error(err); // Log the error for debugging
+    res.status(500).json({ message: 'Server error' });
+  }
+};

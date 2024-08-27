@@ -118,9 +118,9 @@ const TabTable = ({ requests }) => {
             {requestToBeRendered.map((row, index) => (
               <tr key={index} className="border-t">
                 <td className="py-2 px-4">{row.description}</td>
-                <td className="py-2 px-4">{row.requestType}</td>
-                <td className="py-2 px-4">{row.deviceType}</td>
-                <td className="py-2 px-4">{row.Urgency}</td>
+                <td className="py-2 px-4">{row.request_type}</td>
+                <td className="py-2 px-4">{row.device_type}</td>
+                <td className="py-2 px-4">{row.priority}</td>
                 <td className="py-2 px-4">
                   {row.status === 'Completed' ?
                     <button
