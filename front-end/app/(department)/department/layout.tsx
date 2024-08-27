@@ -4,14 +4,19 @@ import Navbar from "./_components/navbar";
 
 const Layout = ({ children = [] }) => {
   return (
-    <div className="min-h-screen flex">
-      <div className="mr-72 hidden md:block">
+    <div className="h-full">
+      <div className="h-[80px] md:pl-72 fixed inset-y-0 w-full z-50">
+        <Navbar />
+      </div>
+
+      <div className="hidden md:flex h-full w-56
+       flex-col fixed inset-y-0 z-50 ml-4">
         <Sidebar />
       </div>
-      <div className="flex  flex-grow flex-col pt-3">
-        <Navbar />
-        <main className="flex-grow p-6">{children}</main>
-      </div>
+      <main className="md:pl-72 pt-[82px] h-full mt-8">
+         {children}
+      </main>
+      
     </div>
   );
 };

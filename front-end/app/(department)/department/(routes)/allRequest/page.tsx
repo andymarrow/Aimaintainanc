@@ -94,7 +94,9 @@ const AllRequest = () => {
       {/* New Request button */}
 
       {viewType === "table" ? (
+        <div >
         <Table requests={sortedRequests} />
+        </div>
       ) : (
         <Card requests={sortedRequests} />
       )}
