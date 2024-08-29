@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import jwtDecode from "jwt-decode";
 import {
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 import { SidebarItem } from "./sidebar-item";
 import Image from "next/image";
+import { useRouter } from "next/navigation"; // Import the useRouter hook for navigation
 
 const guestRoutes = [
   {
@@ -50,17 +52,13 @@ const guestRoutes = [
     label: "Settings",
     href: "/department/settings",
   },
-  {
-    icon: LogOut,
-    label: "Logout",
-    href: "/auth/Home",
-  },
 ];
 
 export const SidebarRoutes = () => {
   const [employeeName, setEmployeeName] = useState("");
   const [departmentName, setDepartmentName] = useState("");
   const [role, setRole] = useState("");
+  const router = useRouter(); // Initialize the router
 
   useEffect(() => {
     const getTokenFromCookies = () => {
@@ -74,16 +72,18 @@ export const SidebarRoutes = () => {
 
     const fetchDepartmentName = async (departmentId: string) => {
       try {
-        const response = await fetch(`http://localhost:3002/api/requests/department/${departmentId}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `http://localhost:3002/api/requests/department/${departmentId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (response.ok) {
           const data = await response.json();
           setDepartmentName(data.name);
-          console.log(data.name);
         } else {
           setDepartmentName("Unknown Department");
         }
@@ -92,19 +92,24 @@ export const SidebarRoutes = () => {
       }
     };
 
-
     const token = getTokenFromCookies();
 
     if (token) {
-      const decodedToken: any = jwtDecode(token); // Add type assertion if necessary
+      const decodedToken: any = jwtDecode(token);
       setEmployeeName(decodedToken.username);
-      setRole(decodedToken.role); // Assuming `role` is available in token
+      setRole(decodedToken.role);
       fetchDepartmentName(decodedToken.departementId);
-      console.log(decodedToken.departementId)
     }
   }, []);
 
-  const routes = guestRoutes;
+  const handleLogout = () => {
+    // Clear the authToken cookie by setting it to expire in the past
+    document.cookie =
+      "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+    // Redirect to the home page
+    router.push("/auth/Home");
+  };
 
   return (
     <div className="flex flex-col w-full">
@@ -112,11 +117,13 @@ export const SidebarRoutes = () => {
         <Image height={40} width={40} alt="logo" src="/avatar.png" />
         <div className="flex flex-col">
           <h5>Hey, {employeeName || "Guest"}</h5>
-          <h6><strong>{departmentName || "Unknown Department"} </strong></h6>
+          <h6>
+            <strong>{departmentName || "Unknown Department"}</strong>
+          </h6>
           <strong>{role || "Role"}</strong>
         </div>
       </div>
-      {routes.map((route) => (
+      {guestRoutes.map((route) => (
         <SidebarItem
           key={route.href}
           icon={route.icon}
@@ -124,6 +131,14 @@ export const SidebarRoutes = () => {
           href={route.href}
         />
       ))}
+
+      <div
+        className="mt-5 flex items-center gap-x-2 text-black font-[500] text-sm pl-6 transition-all hover:text-sky-700 hover:bg-slate-300/20 cursor-pointer"
+        onClick={handleLogout}
+      >
+        <LogOut size={20} />
+        <span>Logout</span>
+      </div>
     </div>
   );
 };
