@@ -308,3 +308,25 @@ export const getUserInfo = async (req: Request, res: Response) => {
   }
 };
 
+
+
+export const getDepartmentName = async (req: Request, res: Response) => {
+  const { departmentId } = req.params;
+
+  try {
+    const department = await prisma.department.findUnique({
+      where: { department_id: parseInt(departmentId) },
+      select: { department_name: true },
+    });
+
+    if (!department) {
+      return res.status(404).json({ message: "Department not found" });
+    }
+
+    res.status(200).json({ name: department.department_name });
+  } catch (error) {
+    console.error("Error fetching department name:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+

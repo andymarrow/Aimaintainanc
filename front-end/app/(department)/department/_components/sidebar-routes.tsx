@@ -74,10 +74,16 @@ export const SidebarRoutes = () => {
 
     const fetchDepartmentName = async (departmentId: string) => {
       try {
-        const response = await fetch(`/api/department/${departmentId}`);
+        const response = await fetch(`http://localhost:3002/api/requests/department/${departmentId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
         if (response.ok) {
           const data = await response.json();
           setDepartmentName(data.name);
+          console.log(data.name);
         } else {
           setDepartmentName("Unknown Department");
         }
@@ -86,13 +92,15 @@ export const SidebarRoutes = () => {
       }
     };
 
+
     const token = getTokenFromCookies();
 
     if (token) {
       const decodedToken: any = jwtDecode(token); // Add type assertion if necessary
       setEmployeeName(decodedToken.username);
       setRole(decodedToken.role); // Assuming `role` is available in token
-      fetchDepartmentName(decodedToken.department_id);
+      fetchDepartmentName(decodedToken.departementId);
+      console.log(decodedToken.departementId)
     }
   }, []);
 
@@ -105,7 +113,7 @@ export const SidebarRoutes = () => {
         <div className="flex flex-col">
           <h5>Hey, {employeeName || "Guest"}</h5>
           <h6><strong>{departmentName || "Unknown Department"} </strong></h6>
-          <strong>{role || "Role"}</strong> 
+          <strong>{role || "Role"}</strong>
         </div>
       </div>
       {routes.map((route) => (

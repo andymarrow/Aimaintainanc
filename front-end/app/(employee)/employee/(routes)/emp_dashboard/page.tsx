@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState }  from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar } from "../../_componenets/EmpComp/navbar";
 import { Sidebar } from "../../_componenets/EmpComp/sidebar";
 import { requests } from "../../empData";
@@ -17,7 +17,7 @@ interface DecodedToken {
 
 const SettingsPage = () => {
 
-const [employeeName, setEmployeeName] = useState<string>("");
+  const [employeeName, setEmployeeName] = useState<string>("");
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -37,30 +37,30 @@ const [employeeName, setEmployeeName] = useState<string>("");
       const decodedToken = jwtDecode<DecodedToken>(token);
       console.log(decodedToken.username)
       setEmployeeName(decodedToken.username);
-      
 
-       // Fetch requests from the API
-       fetch('http://localhost:3002/api/requests/maintenancerequests', {
+
+      // Fetch requests from the API
+      fetch('http://localhost:3002/api/requests/maintenancerequests', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`, // Authorization header
         },
         body: JSON.stringify({ employeeName: decodedToken.username }), // Pass employeeName here
-      
+
       })
-      .then((response) => response.json() 
-    
-    )
-      .then((data) => {
-        setRequests(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching requests:', error);
-        setLoading(false);
-      });
-     
+        .then((response) => response.json()
+
+        )
+        .then((data) => {
+          setRequests(data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching requests:', error);
+          setLoading(false);
+        });
+
 
     } else {
       setLoading(false);
@@ -84,7 +84,7 @@ const [employeeName, setEmployeeName] = useState<string>("");
   //   (req) => req.requesterName === employeeName
   // );
 
-if (loading) {
+  if (loading) {
     return <div className="flex justify-center items-center bg-blue-400 h-full">Loading...</div>;
   }
 
