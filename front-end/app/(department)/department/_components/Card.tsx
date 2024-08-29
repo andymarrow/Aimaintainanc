@@ -27,15 +27,15 @@ const Card = ({ requests }) => {
             className="cursor-pointer bg-white shadow-md rounded-lg p-4 mb-4 border
            border-gray-200 hover:bg-gray-100 transfrom hover:shadow-lg transition-transform hover:-translate-y-1"
           >
-            <h2 className="text-xl font-bold mb-2">{request.requesterName}</h2>
+            <h2 className="text-xl font-bold mb-2">{request.requester_name}</h2>
             <p>
               <strong>Email:</strong> {request.email}
             </p>
             <p>
-              <strong>Phone Number:</strong> {request.phoneNo}
+              <strong>Phone Number:</strong> {request.phone_number}
             </p>
             <p>
-              <strong>Request Type:</strong> {request.requestType}
+              <strong>Request Type:</strong> {request.request_type}
             </p>
             <p>
               <strong>Description:</strong> {request.description}
@@ -44,13 +44,13 @@ const Card = ({ requests }) => {
               <strong>Departmet:</strong> {request.department}
             </p>
             <p>
-              <strong>Device Type:</strong> {request.deviceType}
+              <strong>Device Type:</strong> {request.device_type}
             </p>
             <p>
-              <strong>Model Number:</strong> {request.modelNo}
+              <strong>Model Number:</strong> {request.model_no}
             </p>
             <p>
-              <strong>Urgency</strong> {request.Urgency}
+              <strong>Urgency</strong> {request.priority}
             </p>
             <div
               className={`inline-block px-2 py-1 mt-2 text-xs font-semibold rounded-full ${

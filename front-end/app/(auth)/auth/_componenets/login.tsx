@@ -41,7 +41,7 @@ function Login() {
           case "Employee":
             router.push("/employee/emp_dashboard");
             break;
-          case "Deparment_Head":
+          case "Department_Head":
             router.push("/department/allRequest");
             break;
           case "Maintenance_Head":

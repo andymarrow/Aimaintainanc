@@ -1,23 +1,95 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Table from "../../_components/Table";
 import Card from "../../_components/Card";
 import { useState } from "react";
 import { requests } from "../../data";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import jwtDecode from "jwt-decode"; // Correct import
+
+// Define the interface for the JWT payload
+interface DecodedToken {
+  userId: string;
+  username: string;
+  role: string;
+}
 
 const AllRequest = () => {
   const [viewType, setViewType] = useState("table");
   const [sortBy, setSortBy] = useState("Urgency");
-
+  const [employeeName, setEmployeeName] = useState<string>("");
+  const [requests, setRequests] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  
   const router = useRouter();
 
-  const department = "IT";
-  const requestsByDepartment = requests.filter(
-    (request) => request.department === department
-  );
+
+  
+
+useEffect(() => {
+  const getTokenFromCookies = () => {
+    const cookieString = document.cookie;
+    const cookies = cookieString.split("; ");
+    const authTokenCookie = cookies.find((cookie) =>
+      cookie.startsWith("authToken=")
+    );
+    return authTokenCookie ? authTokenCookie.split("=")[1] : null;
+  };
+
+  const token = getTokenFromCookies();
+
+  if (token) {
+    const decodedToken = jwtDecode<DecodedToken>(token);
+    console.log(decodedToken.username)
+    setEmployeeName(decodedToken.username);
+    
+
+     // Fetch requests from the API
+     fetch('http://localhost:3002/api/requests/maintenancerequestsApproval', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Authorization header
+      },
+      body: JSON.stringify({ employeeName: decodedToken.username }), // Pass employeeName here
+    
+    })
+    .then((response) => response.json() 
+  
+  )
+    .then((data) => {
+      setRequests(data);
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.error('Error fetching requests:', error);
+      setLoading(false);
+    });
+   
+
+  } else {
+    setLoading(false);
+  }
+}, []);
+
+const sortedRequests = requests.slice().sort((a, b) => {
+  if (sortBy === "Urgency") {
+    return a.priority.localeCompare(b.priority);
+  } else if (sortBy === "Status") {
+    return a.status.localeCompare(b.status);
+  } else if (sortBy === "RequestType") {
+    return a.request_type?.localeCompare(b.request_type || "") || 0;
+  }
+  return 0;
+});
+
+
+  // const department = "IT";
+  // const requestsByDepartment = requests.filter(
+  //   (request) => request.department === department
+  // );
 
   const handleToggleView = (view) => {
     setViewType(view);
@@ -27,22 +99,24 @@ const AllRequest = () => {
     setSortBy(sortField);
   };
 
-  const sortedRequests = requestsByDepartment.slice().sort((a, b) => {
-    if (sortBy === "Urgency") {
-      return a.Urgency.localeCompare(b.Urgency);
-    } else if (sortBy === "Status") {
-      return a.status.localeCompare(b.status);
-    } else if (sortBy === "RequestType") {
-      return a.requestType.localeCompare(b.requestType);
-    }
-    return 0;
-  });
+  // const sortedRequests = requestsByDepartment.slice().sort((a, b) => {
+  //   if (sortBy === "Urgency") {
+  //     return a.Urgency.localeCompare(b.Urgency);
+  //   } else if (sortBy === "Status") {
+  //     return a.status.localeCompare(b.status);
+  //   } else if (sortBy === "RequestType") {
+  //     return a.requestType.localeCompare(b.requestType);
+  //   }
+  //   return 0;
+  // });
   const handleClickRoute = (id: Number) => {
-    router.push(`/department/api/newForm/id`);
+    const randomId = Math.floor(Math.random() * 10000); // Change 10000 to any maximum number if needed
+   
+    router.push(`/department/api/newForm/${randomId}`);
   };
 
   return (
-    <div>
+    <div className="">
       <div className="flex justify-between">
         <div className="flex mb-4">
           <button

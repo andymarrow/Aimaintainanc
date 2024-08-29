@@ -34,6 +34,7 @@ router.get("/department/allRequest", (req, res) => {
   res.send("Department Head Requests");
 });
 
+
 // Authentication route
 router.post("/login", loginUser);
 

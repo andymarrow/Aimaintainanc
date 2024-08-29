@@ -85,7 +85,7 @@ const [employeeName, setEmployeeName] = useState<string>("");
   // );
 
 if (loading) {
-    return <div>Loading...</div>;
+    return <div className="flex justify-center items-center bg-blue-400 h-full">Loading...</div>;
   }
 
   // if (!requests || requests.length === 0) {

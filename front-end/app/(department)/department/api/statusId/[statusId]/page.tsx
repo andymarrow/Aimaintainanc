@@ -1,63 +1,89 @@
 "use client";
-import { usePathname } from "next/navigation";
-import { requests } from "../../../data";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+interface MaintenanceRequest {
+  request_id: number;
+  requester_name: string;
+  email: string;
+  device_type: string;
+  phone_number: string;
+  status: string;
+}
 
 const RequestDetail = () => {
-  const [showHighForm, setShowHighForm] = useState(false);
-
+  const [request, setRequest] = useState<MaintenanceRequest | null>(null);
   const pathname = usePathname();
-  const idString = pathname.split("/statusId/").pop();
+  const request_id = pathname.split("/statusId/").pop();
+  const router = useRouter();
 
-  if (!idString) return <p>Request Not Found.</p>;
+  useEffect(() => {
+    const fetchRequest = async () => {
+      try {
+        const response = await fetch(`http://localhost:3002/api/requests/maintenanceRequests/${request_id}`);
+        if (!response.ok) {
+          throw new Error("Request not found");
+        }
+        const data = await response.json();
+        setRequest(data[0]); // Assuming the API returns an array
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-  const id = parseInt(idString, 10);
-
-  const request = requests.find((req) => req.id === id);
+    if (request_id) {
+      fetchRequest();
+    }
+  }, [request_id]);
 
   if (!request) {
     return <p>Request Not Found.</p>;
   }
 
-  const handleAccept = () => {
-    // we insert backend logic for accepted request here
-    alert("Request Accepted");
-  };
-  const handleSubmit = () => {
-    // we insert backend logic for submitted request here
-    alert("Request Submitted");
-  };
+  const handleStatusUpdate = async (newStatus: string) => {
+    try {
+      const response = await fetch(`http://localhost:3002/api/requests/maintenanceRequests/${request?.request_id}/status`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
 
-  const handleReject = () => {
-    // we insert backend logic for rejected request here
-    alert("Request Rejected");
-  };
+      if (!response.ok) {
+        throw new Error("Failed to update status");
+      }
 
-  const handleHighForm = () => {
-    setShowHighForm(true);
-  };
+      const updatedRequest = await response.json();
+      setRequest(updatedRequest);
 
-  const handleCloseHighForm = () => {
-    setShowHighForm(false);
+      if (newStatus === "Pending") {
+        router.push("/department/accepted");
+      } else if (newStatus === "Rejected") {
+        router.push("/department/rejected");
+      }
+    } catch (error) {
+      console.error("Error updating request status:", error);
+      alert(`Failed to ${newStatus.toLowerCase()} request`);
+    }
   };
+  
 
-  const handleReconsideration = () => {
-    // we insert backend logic for reconsideration here
-    alert("Request Reconsidered");
-  };
-
+  const handleAccept = () => handleStatusUpdate("Pending");
+  const handleReject = () => handleStatusUpdate("Rejected");
+  const handleRecondiser = () => handleStatusUpdate("Pending");
   return (
     <div className="container mx-auto p-4">
       <div className="bg-white shadow-md rounded-lg p-6">
         <h1 className="text-2xl font-bold mb-4">Request Details</h1>
         <p>
-          <strong>Requester Name:</strong> {request.requesterName}
+          <strong>Requester Name:</strong> {request.requester_name}
         </p>
         <p>
-          <strong>Device Type:</strong> {request.deviceType}
+          <strong>Device Type:</strong> {request.device_type}
         </p>
         <p>
-          <strong>Phone Number:</strong> {request.phoneNo}
+          <strong>Phone Number:</strong> {request.phone_number}
         </p>
         <p>
           <strong>Email:</strong> {request.email}
@@ -66,7 +92,7 @@ const RequestDetail = () => {
           <strong>Status:</strong> {request.status}
         </p>
 
-        {request.status === "InProgress" && (
+        {request.status === "In_Progress" && (
           <div className="mt-4">
             <button
               className="bg-green-500 text-white px-4 py-2 rounded mr-2"
@@ -80,47 +106,19 @@ const RequestDetail = () => {
             >
               Reject
             </button>
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-              onClick={handleHighForm}
-            >
-              High Form
-            </button>
           </div>
         )}
 
-        {request.status === "rejected" && (
+
+{request.status === "Rejected" && (
           <div className="mt-4">
             <button
-              className="bg-yellow-500 text-white px-4 py-2 rounded"
-              onClick={handleReconsideration}
+              className="bg-yellow-500 text-white px-4 py-2 rounded mr-2"
+              onClick={handleRecondiser}
             >
-              Reconsider
+              Recondiser
             </button>
-          </div>
-        )}
-
-        {showHighForm && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <h2 className="text-xl font-bold mb-4">High Form</h2>
-              <p>Add additional information for the request:</p>
-              <textarea className="w-full p-2 border rounded mt-2 mb-4"></textarea>
-              <div className="flex justify-end">
-                <button
-                  className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
-                  onClick={handleCloseHighForm}
-                >
-                  Close
-                </button>
-                <button
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </button>
-              </div>
-            </div>
+            
           </div>
         )}
       </div>

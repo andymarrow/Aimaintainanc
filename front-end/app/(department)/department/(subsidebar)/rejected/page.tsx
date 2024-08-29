@@ -1,20 +1,65 @@
 "use client";
-import React, { useState } from "react";
-import { requests } from "../../data";
+import React, { useState, useEffect } from "react";
 import Table from "../../_components/Table";
 import Card from "../../_components/Card";
+import { useRouter } from "next/navigation";
+import jwtDecode from "jwt-decode"; // Correct import
 
-const RejectedRequest = () => {
+const AcceptedRequest = () => {
   const [viewType, setViewType] = useState("table");
   const [sortBy, setSortBy] = useState("Urgency");
+  const department = "IT"; // Adjust if department is dynamic or fetched
 
-  const department = "IT";
-  const departmentRequest = requests.filter(
-    (request) => request.department === department
-  );
+  const [requests, setRequests] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  const rejectedRequest = departmentRequest.filter(
-    (request) => request.status === "rejected"
+  interface DecodedToken {
+    userId: string;
+    username: string;
+    role: string;
+  }
+
+  useEffect(() => {
+    const getTokenFromCookies = () => {
+      const cookieString = document.cookie;
+      const cookies = cookieString.split("; ");
+      const authTokenCookie = cookies.find((cookie) =>
+        cookie.startsWith("authToken=")
+      );
+      return authTokenCookie ? authTokenCookie.split("=")[1] : null;
+    };
+
+    const token = getTokenFromCookies();
+
+    if (token) {
+      const decodedToken = jwtDecode<DecodedToken>(token);
+
+      // Fetch requests from the API
+      fetch('http://localhost:3002/api/requests/maintenancerequestsApproval', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Authorization header
+        },
+        body: JSON.stringify({ department }), // Pass department if required
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setRequests(data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching requests:', error);
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  // Filter requests to show only accepted ones
+  const acceptedRequests = requests.filter(
+    (request) => request.status === "Rejected"
   );
 
   const handleToggleView = (view) => {
@@ -26,7 +71,7 @@ const RejectedRequest = () => {
     setSortBy(sortField);
   };
 
-  const sortedRequests = rejectedRequest.slice().sort((a, b) => {
+  const sortedRequests = acceptedRequests.slice().sort((a, b) => {
     if (sortBy === "Urgency") {
       return a.Urgency.localeCompare(b.Urgency);
     } else if (sortBy === "Status") {
@@ -39,7 +84,7 @@ const RejectedRequest = () => {
 
   return (
     <div>
-      <div className="flex justify-between">
+      <div className="flex justify-between mb-4">
         <div className="flex mb-4">
           <button
             onClick={() => handleToggleView("table")}
@@ -68,9 +113,9 @@ const RejectedRequest = () => {
             onChange={handleSort}
             className="border border-gray-300 p-2 rounded-lg"
           >
-            <option value="Urgency">sort by Urgency</option>
-            <option value="Status">sort by Status</option>
-            <option value="RequestType">sort by Request Type</option>
+            <option value="Urgency">Sort by Urgency</option>
+            <option value="Status">Sort by Status</option>
+            <option value="RequestType">Sort by Request Type</option>
           </select>
         </div>
       </div>
@@ -83,4 +128,4 @@ const RejectedRequest = () => {
   );
 };
 
-export default RejectedRequest;
+export default AcceptedRequest;

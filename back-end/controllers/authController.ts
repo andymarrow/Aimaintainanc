@@ -40,7 +40,7 @@ export const loginUser = async (req: Request, res: Response) => {
         throw new Error("No token key is specified in environment variable");
       }
       const token = jwt.sign(
-        { userId: user.user_id,  username: user.username, role: user.role },
+        { userId: user.user_id,  username: user.username, departementId : user.department_id , role: user.role },
         secret,
         {
           expiresIn: "1h",
@@ -51,7 +51,7 @@ export const loginUser = async (req: Request, res: Response) => {
       // Set token in HTTP-only cookie
       res.setHeader(
         "Set-Cookie",
-        `authToken=${token}; HttpOnly; Path=/; Max-Age=3600`
+        `authToken=${token}; HttpOnly; Path=/; Max-Age=3600000000`
       );
 
       res.json({ user: { username: user.username, role: user.role }, token });
