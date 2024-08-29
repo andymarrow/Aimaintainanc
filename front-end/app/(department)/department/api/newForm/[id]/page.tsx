@@ -21,7 +21,10 @@ export default function AssignedCompleted() {
   const [urgency, setUrgency] = useState(" ");
   const [popupMessage, setPopupMessage] = useState("");
   const [popupVisible, setPopupVisible] = useState(false);
-
+  const [requesterName, setRequesterName] = useState("");
+  const [email, setEmail] = useState("");
+  const [departmentName, setDepartmentName] = useState("");
+  
 
 
   // Utility function to get the user ID from the JWT token
@@ -41,6 +44,7 @@ export default function AssignedCompleted() {
 
   useEffect(() => {
     handleDepartmentList();
+    handleRequestInfo()
   }, []);
 
 
@@ -110,6 +114,41 @@ export default function AssignedCompleted() {
     setUrgency(e.target.value)
   }
 
+  const handleRequestInfo = async () => {
+    const userId = getUserIdFromToken();
+    if (!userId) {
+      console.error('User is not authenticated');
+      return;
+    }
+  
+    try {
+      const response = await fetch(`http://localhost:3002/api/requests/userInfo/${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+  
+        // Assuming the API returns an object with username, email, and department_name
+        setRequestType(data.request_type || ""); // Assuming you have this in user info
+        setDepartmentName(data.department_name); // Set departmentName to update the input field
+        
+        // Populate form fields
+        (document.getElementById('RequesterName') as HTMLInputElement).value = data.username;
+        (document.getElementById('Email') as HTMLInputElement).value = data.email;
+      } else {
+        console.error(`Fetching user info error: ${response.statusText}`);
+      }
+    } catch (err) {
+      console.error(`Fetching user info error: ${err}`);
+    }
+  };
+  
+  
+
   const handleDepartmentList = async () => {
     try {
       const response = await fetch(
@@ -138,7 +177,8 @@ export default function AssignedCompleted() {
   };
   return (
     <div className="">
-      <main className="">
+      
+      <main className=" ">
         <div className="bg-slate-400  rounded-lg shadow-lg p-4 sm:p-6 lg:p-8  w-full ">
           <h2 className="text-3xl font-bold mb-4 text-center">Request Form</h2>
           <p className="mb-4">
@@ -170,8 +210,10 @@ export default function AssignedCompleted() {
                         className="border rounded-md px-3 py-2 w-full"
                         id="RequesterName"
                         name="requester_name"
+                        value={requesterName}
                         placeholder="enter your name"
                         required
+                        readOnly
                       />
                     </div>
                     <div>
@@ -183,8 +225,10 @@ export default function AssignedCompleted() {
                         className="border rounded-md px-3 py-2 w-full"
                         id="Email"
                         name="email"
+                        value={email}
                         placeholder="enter your email"
                         required
+                        readOnly
                       />
                     </div>
                   </div>
@@ -197,12 +241,20 @@ export default function AssignedCompleted() {
                         Phone No
                       </label>
                       <input
-                        type="text"
-                        className="border rounded-md px-3 py-2 w-full"
-                        name="phone_number"
-                        placeholder="enter your phone number"
-                        required
-                      />
+    type="text"
+    className="border rounded-md px-3 py-2 w-full"
+    name="phone_number"
+    placeholder="enter your phone number"
+    required
+    defaultValue="+251"
+    pattern="\+251[0-9]{9}" 
+    maxLength="13" 
+    onInput={(e) => {
+      if (!e.target.value.startsWith("+251")) {
+        e.target.value = "+251";
+      }
+    }}
+  />
                     </div>
                     <div>
                       <label
@@ -260,22 +312,40 @@ export default function AssignedCompleted() {
                       </div>
                     )}
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Department
-                      </label>
-                      <select
-                        name="department_name"
-                        className="w-full p-2 border border-gray-300 rounded-lg"
-                      >
-                        {departments?.length > 0 &&
-                          departments.map((department: any, index) => (
-                            <option key={index} value={department}>
-                              {department}
-                            </option>
-                          ))}
-                        ;
-                      </select>
-                    </div>
+  <label className="block text-sm font-medium text-gray-700">
+    Department
+  </label>
+  
+  {departmentName ? (
+    <input
+      type="text"
+      className="border rounded-md px-3 py-2 w-full"
+      id="department_name"
+      name="department_name"
+      value={departmentName}
+      placeholder="enter your department name"
+      readOnly
+      readOnly
+    />
+  ) : (
+    <select
+      name="department_name"
+      value={departmentName}
+      onChange={(e) => setDepartmentName(e.target.value)}
+      className="w-full p-2 border border-gray-300 rounded-lg"
+      required
+    >
+      <option value="" disabled>Select your department</option>
+      {departments.length > 0 &&
+        departments.map((department: any, index) => (
+          <option key={index} value={department}>
+            {department}
+          </option>
+        ))}
+    </select>
+  )}
+</div>
+
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                     <div>
