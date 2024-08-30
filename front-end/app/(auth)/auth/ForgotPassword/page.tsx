@@ -95,7 +95,7 @@ function ForgotPassword() {
           </h3>
           {step === 1 ? (
             <>
-              <div className="mb-2">
+              <div className="mb-2  text-center">
                 <label
                   className="mb-2 text-sm font-medium text-gray-700 mr-10"
                   htmlFor="email"
@@ -117,7 +117,7 @@ function ForgotPassword() {
             </>
           ) : step === 2 ? (
             <>
-              <div className="mb-2">
+              <div className="mb-2  text-center" >
                 <label
                   className="mb-2 text-sm font-medium text-gray-700 mr-10"
                   htmlFor="verification-code"
@@ -139,42 +139,47 @@ function ForgotPassword() {
             </>
           ) : (
             <>
-              <div className="mb-2">
-                <label
-                  className="mb-2 text-sm font-medium text-gray-700 mr-10"
-                  htmlFor="new-password"
-                >
-                  New Password
-                </label>
-                <input
-                  className="p-2 border border-gray-300 rounded-lg mb-4"
-                  placeholder="New Password"
-                  type="password"
-                  id="new-password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
-                <label
-                  className="mb-2 text-sm font-medium text-gray-700 mr-10"
-                  htmlFor="confirm-password"
-                >
-                  Confirm Password
-                </label>
-                <input
-                  className="p-2 border border-gray-300 rounded-lg mb-4"
-                  placeholder="Confirm Password"
-                  type="password"
-                  id="confirm-password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-                <button className="w-full p-2 bg-orange-500 text-white rounded-lg">
-                  Reset Password
-                </button>
-              </div>
+              <div className="mb-2 text-center">
+  <div className="mb-4">
+    <label
+      className="mb-2 text-sm font-medium text-gray-700"
+      htmlFor="new-password"
+    >
+      New Password
+    </label>
+    <input
+      className="p-2 border border-gray-300 rounded-lg w-full"
+      placeholder="New Password"
+      type="password"
+      id="new-password"
+      value={newPassword}
+      onChange={(e) => setNewPassword(e.target.value)}
+    />
+  </div>
+  <div className="mb-4">
+    <label
+      className="mb-2 text-sm font-medium text-gray-700"
+      htmlFor="confirm-password"
+    >
+      Confirm Password
+    </label>
+    <input
+      className="p-2 border border-gray-300 rounded-lg w-full"
+      placeholder="Confirm Password"
+      type="password"
+      id="confirm-password"
+      value={confirmPassword}
+      onChange={(e) => setConfirmPassword(e.target.value)}
+    />
+  </div>
+  <button className="w-full p-2 bg-orange-500 text-white rounded-lg">
+    Reset Password
+  </button>
+</div>
+
             </>
           )}
-          {message && <p className="text-center text-red-500 mt-4">{message}</p>}
+          {message && <p className="text-center text-green-500 mt-4">{message}</p>}
         </form>
       </div>
     </div>
