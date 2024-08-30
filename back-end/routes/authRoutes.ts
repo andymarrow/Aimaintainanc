@@ -1,6 +1,6 @@
 import express from "express";
 import { authorizeRole } from "../middleware/authorizeRole";
-import { loginUser } from "../controllers/authController";
+import { loginUser, requestPasswordReset, resetPassword  } from "../controllers/authController";
 
 const router = express.Router();
 
@@ -37,5 +37,8 @@ router.get("/department/allRequest", (req, res) => {
 
 // Authentication route
 router.post("/login", loginUser);
+router.post("/request-password-reset", requestPasswordReset);
+router.post("/reset-password", resetPassword);
+
 
 export default router;
