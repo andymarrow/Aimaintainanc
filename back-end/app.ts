@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
 import requestRoutes from "./routes/requestRoutes";
+import helpDeskRoutes from "./routes/helpDeskRoutes";
 import cookieParser from "cookie-parser";
 import { handleChatbotMessage } from "./controllers/chatbotIntents";
 import * as dotenv from "dotenv";
@@ -20,6 +21,7 @@ app.use(bodyParser.json());
 dotenv.config();
 
 app.use("/api/requests/", requestRoutes);
+app.use("/api/search/", helpDeskRoutes);
 app.use("/api/auth/", authRoutes);
 app.use("/api/registers/", userRoutes);
 
