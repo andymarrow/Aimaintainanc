@@ -128,7 +128,7 @@ model ProblemSearch {
   solution_id Int      @id @default(autoincrement())
   title       String
   video_url   String
-  description String
+  description Json
   created_at  DateTime @default(now())
 }
 
