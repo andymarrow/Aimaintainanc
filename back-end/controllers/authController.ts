@@ -135,6 +135,7 @@ export const resetPassword = async (req: Request, res: Response) => {
     });
 
     res.status(200).json({ message: "Password updated successfully" });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
